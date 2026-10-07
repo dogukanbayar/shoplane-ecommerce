@@ -1,4 +1,4 @@
-# MyShop - Full-Stack E-Commerce Platform
+# ShopLane - Full-Stack E-Commerce Platform
 
 <p align="center">
   A modern e-commerce application built with React, Node.js, Express and MongoDB.
@@ -37,36 +37,40 @@ with a REST API, JWT authentication, MongoDB persistence and real-time capabilit
 
 ## Screenshots
 
-<table>
-  <tr>
-    <td><img src="./docs/screenshots/resim1.png" alt="MyShop screen 1"></td>
-    <td><img src="./docs/screenshots/resim2.png" alt="MyShop screen 2"></td>
-  </tr>
-  <tr>
-    <td><img src="./docs/screenshots/resim3.png" alt="MyShop screen 3"></td>
-    <td><img src="./docs/screenshots/resim4.png" alt="MyShop screen 4"></td>
-  </tr>
-  <tr>
-    <td><img src="./docs/screenshots/resim5.png" alt="MyShop screen 5"></td>
-    <td><img src="./docs/screenshots/resim6.png" alt="MyShop screen 6"></td>
-  </tr>
-  <tr>
-    <td><img src="./docs/screenshots/resim7.png" alt="MyShop screen 7"></td>
-    <td><img src="./docs/screenshots/resim8.png" alt="MyShop screen 8"></td>
-  </tr>
-  <tr>
-    <td><img src="./docs/screenshots/resim9.png" alt="MyShop screen 9"></td>
-    <td><img src="./docs/screenshots/resim10.png" alt="MyShop screen 10"></td>
-  </tr>
-  <tr>
-    <td><img src="./docs/screenshots/resim11.png" alt="MyShop screen 11"></td>
-    <td><img src="./docs/screenshots/resim12.png" alt="MyShop screen 12"></td>
-  </tr>
-  <tr>
-    <td><img src="./docs/screenshots/resim13.png" alt="MyShop screen 13"></td>
-    <td><img src="./docs/screenshots/resim14.png" alt="MyShop screen 14"></td>
-  </tr>
-</table>
+<p align="center">
+  <img src="./docs/screenshots/resim1.png" alt="MyShop screen 1" width="420" />
+  <img src="./docs/screenshots/resim2.png" alt="MyShop screen 2" width="420" />
+</p>
+
+<p align="center">
+  <img src="./docs/screenshots/resim3.png" alt="MyShop screen 3" width="420" />
+  <img src="./docs/screenshots/resim4.png" alt="MyShop screen 4" width="420" />
+</p>
+
+<p align="center">
+  <img src="./docs/screenshots/resim5.png" alt="MyShop screen 5" width="420" />
+  <img src="./docs/screenshots/resim6.png" alt="MyShop screen 6" width="420" />
+</p>
+
+<p align="center">
+  <img src="./docs/screenshots/resim7.png" alt="MyShop screen 7" width="420" />
+  <img src="./docs/screenshots/resim8.png" alt="MyShop screen 8" width="420" />
+</p>
+
+<p align="center">
+  <img src="./docs/screenshots/resim9.png" alt="MyShop screen 9" width="420" />
+  <img src="./docs/screenshots/resim10.png" alt="MyShop screen 10" width="420" />
+</p>
+
+<p align="center">
+  <img src="./docs/screenshots/resim11.png" alt="MyShop screen 11" width="420" />
+  <img src="./docs/screenshots/resim12.png" alt="MyShop screen 12" width="420" />
+</p>
+
+<p align="center">
+  <img src="./docs/screenshots/resim13.png" alt="MyShop screen 13" width="420" />
+  <img src="./docs/screenshots/resim14.png" alt="MyShop screen 14" width="420" />
+</p>
 
 ## Tech Stack
 
