@@ -250,21 +250,6 @@ npm test -- tests/order.test.js
 
 The test suite covers critical e-commerce workflows such as order lifecycle behavior and API verification.
 
-## Screenshots & Showcase
-
-Screenshots of the storefront, customer flows, admin tools, and API documentation:
-
-| View | Screenshot |
-| :--- | :--- |
-| **Home Page** | ![ShopLane home page](docs/screenshots/home-page.png) |
-| **Product Discovery** | ![Product listing and discovery](docs/screenshots/product-list.png) |
-| **Product Detail** | ![Product detail page](docs/screenshots/product-detail.png) |
-| **Cart** | ![Shopping cart](docs/screenshots/cart-view.png) |
-| **Checkout** | ![Checkout step](docs/screenshots/checkout-step.png) |
-| **Admin Analytics** | ![Admin dashboard and analytics](docs/screenshots/admin-dashboard.png) |
-| **Order Management** | ![Admin order management](docs/screenshots/admin-orders.png) |
-| **Swagger API Docs** | ![Swagger API documentation](docs/screenshots/swagger-api-docs.png) |
-
 ## Docker Setup
 
 The repository includes a Docker Compose setup with the following services:
