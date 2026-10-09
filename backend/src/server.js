@@ -25,6 +25,16 @@ const app = express()
 // Security middleware
 app.use(helmetConfig)
 app.use(corsOptions)
+
+// Yapılandırılmış Winston & Morgan Logger Middleware
+const morgan = require("morgan");
+const logger = require("./utils/logger");
+
+const morganStream = {
+  write: (message) => logger.info(message.trim())
+};
+app.use(morgan(":method :url :status :res[content-length] - :response-time ms", { stream: morganStream }));
+
 // app.use(mongoSanitize)  // TODO: Fix compatibility with Express 5.2.1
 // app.use(xss)  // TODO: Fix compatibility with Express 5.2.1
 app.use(hpp)
