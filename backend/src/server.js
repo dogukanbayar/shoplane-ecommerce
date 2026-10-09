@@ -18,7 +18,7 @@ const {
 dotenv.config()
 
 // Connect to database
-connectDB()
+if (process.env.NODE_ENV !== 'test') connectDB()
 
 const app = express()
 
@@ -38,8 +38,8 @@ const cookieParser = require('cookie-parser')
 app.use(cookieParser())
 
 // Rate limiting
-app.use('/api/', limiter)
-app.use('/api/auth/', authLimiter)
+// app.use('/api/', limiter)
+// app.use('/api/auth/', authLimiter)
 app.use('/api/payments/', paymentLimiter)
 
 // Socket.io setup
@@ -74,15 +74,23 @@ io.on('connection', (socket) => {
 app.set('io', io)
 
 // Health check routes
-app.use('/api/health', require('./routes/healthRoutes'))
+app.use("/api/health", require("./routes/healthRoutes"))
+
+// Swagger API Dokümantasyonu
+const swaggerUi = require("swagger-ui-express");
+const swaggerSpec = require("./config/swagger");
+app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+console.log("📄 Swagger API Docs: http://localhost:5001/api/docs");
+
 
 // API Routes (only load routes that exist)
 app.use('/api/products', require('./routes/productRoutes'))
 // app.use('/api/users', require('./routes/userRoutes'))  // TODO: Fix
 app.use('/api/auth', require('./routes/authRoutes'))
 app.use('/api/orders', require('./routes/orderRoutes'))
+app.use('/api/sellers', require('./routes/sellerRoutes'));
 app.use('/api/reviews', require('./routes/reviewRoutes'))
-// app.use('/api/cart', require('./routes/cartRoutes'))  // TODO: Create
+app.use('/api/cart', require('./routes/cartRoutes'))
 // app.use('/api/wishlist', require('./routes/wishlistRoutes'))  // TODO: Create
 app.use('/api/payments', require('./routes/paymentRoutes'))
 app.use('/api/bundles', require('./routes/bundleRoutes'))
@@ -120,7 +128,7 @@ app.use(errorHandler)
 
 const PORT = process.env.PORT || 5001
 
-server.listen(PORT, () => {
+if (process.env.NODE_ENV !== 'test') server.listen(PORT, () => {
   console.log(`
 ╔═══════════════════════════════════════════════════════╗
 ║          🚀 Backend Server Running!                   ║
