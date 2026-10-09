@@ -38,38 +38,38 @@ with a REST API, JWT authentication, MongoDB persistence and real-time capabilit
 ## Screenshots
 
 <p align="center">
-  <img src="./docs/screenshots/resim1.png" alt="ShopLane screen 1" width="420" />
-  <img src="./docs/screenshots/resim2.png" alt="ShopLane screen 2" width="420" />
+  <img src="./docs/screenshots/home-page.png" alt="ShopLane screen 1" width="420" />
+  <img src="./docs/screenshots/product-list.png" alt="ShopLane screen 2" width="420" />
 </p>
 
 <p align="center">
-  <img src="./docs/screenshots/resim3.png" alt="ShopLane screen 3" width="420" />
-  <img src="./docs/screenshots/resim4.png" alt="ShopLane screen 4" width="420" />
+  <img src="./docs/screenshots/product-detail.png" alt="ShopLane screen 3" width="420" />
+  <img src="./docs/screenshots/cart-view.png" alt="ShopLane screen 4" width="420" />
 </p>
 
 <p align="center">
-  <img src="./docs/screenshots/resim5.png" alt="ShopLane screen 5" width="420" />
-  <img src="./docs/screenshots/resim6.png" alt="ShopLane screen 6" width="420" />
+  <img src="./docs/screenshots/checkout-step.png" alt="ShopLane screen 5" width="420" />
+  <img src="./docs/screenshots/customer-orders.png" alt="ShopLane screen 6" width="420" />
 </p>
 
 <p align="center">
-  <img src="./docs/screenshots/resim7.png" alt="ShopLane screen 7" width="420" />
-  <img src="./docs/screenshots/resim8.png" alt="ShopLane screen 8" width="420" />
+  <img src="./docs/screenshots/admin-dashboard.png" alt="ShopLane screen 7" width="420" />
+  <img src="./docs/screenshots/admin-products.png" alt="ShopLane screen 8" width="420" />
 </p>
 
 <p align="center">
-  <img src="./docs/screenshots/resim9.png" alt="ShopLane screen 9" width="420" />
-  <img src="./docs/screenshots/resim10.png" alt="ShopLane screen 10" width="420" />
+  <img src="./docs/screenshots/admin-orders.png" alt="ShopLane screen 9" width="420" />
+  <img src="./docs/screenshots/user-addresses.png" alt="ShopLane screen 10" width="420" />
 </p>
 
 <p align="center">
-  <img src="./docs/screenshots/resim11.png" alt="ShopLane screen 11" width="420" />
-  <img src="./docs/screenshots/resim12.png" alt="ShopLane screen 12" width="420" />
+  <img src="./docs/screenshots/order-return-request.png" alt="ShopLane screen 11" width="420" />
+  <img src="./docs/screenshots/loyalty-rewards.png" alt="ShopLane screen 12" width="420" />
 </p>
 
 <p align="center">
-  <img src="./docs/screenshots/resim13.png" alt="ShopLane screen 13" width="420" />
-  <img src="./docs/screenshots/resim14.png" alt="ShopLane screen 14" width="420" />
+  <img src="./docs/screenshots/influencer-portal.png" alt="ShopLane screen 13" width="420" />
+  <img src="./docs/screenshots/swagger-api-docs.png" alt="ShopLane screen 14" width="420" />
 </p>
 
 ## Tech Stack
