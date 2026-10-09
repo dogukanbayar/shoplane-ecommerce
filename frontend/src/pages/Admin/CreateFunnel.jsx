@@ -4,7 +4,7 @@ import { Filter, Plus, Trash2, Save, ArrowRight } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import API from '../../api/axiosConfig'
 import toast from 'react-hot-toast'
-import AdvancedSEO from '../../components/seo/AdvancedSEO'
+import AdvancedSeo from '../../components/seo/AdvancedSeo'
 
 function CreateFunnel() {
   const navigate = useNavigate()
@@ -99,7 +99,7 @@ function CreateFunnel() {
 
   return (
     <>
-      <AdvancedSEO
+      <AdvancedSeo
         title="Create Funnel - MyShop Admin"
         description="Yeni dönüşüm hunisi oluştur"
       />

@@ -1,113 +1,90 @@
-const mongoose = require('mongoose')
+require('./Seller');
+const mongoose = require("mongoose");
 
-const orderSchema = new mongoose.Schema({
-  user: {
+const orderItemSchema = new mongoose.Schema({
+  product: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: "Product",
     required: true
   },
-  orderNumber: {
-    type: String,
-    unique: true,
+  name: { type: String, required: true },
+  price: { type: Number, required: true },
+  quantity: { type: Number, required: true, min: 1 },
+  image: { type: String }
+});
+
+const subOrderSchema = new mongoose.Schema({
+  seller: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Seller",
     required: true
   },
-  items: [{
-    product: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Product',
-      required: true
-    },
-    name: String,
-    image: String,
-    price: Number,
-    quantity: {
-      type: Number,
-      required: true,
-      min: 1
-    },
-    size: String,
-    color: String
-  }],
-  shippingAddress: {
-    fullName: { type: String, required: true },
-    phone: { type: String, required: true },
-    address: { type: String, required: true },
-    city: { type: String, required: true },
-    district: { type: String, required: true },
-    zipCode: { type: String, required: true }
-  },
-  paymentMethod: {
-    type: String,
-    required: true,
-    enum: ['Kredi Kartı', 'Banka Kartı', 'Havale/EFT', 'Kapıda Ödeme']
-  },
-  paymentResult: {
-    id: String,
-    status: String,
-    updateTime: String
-  },
-  subtotal: {
-    type: Number,
-    required: true,
-    default: 0
-  },
-  shippingPrice: {
-    type: Number,
-    required: true,
-    default: 0
-  },
-  discount: {
-    type: Number,
-    default: 0
-  },
-  totalPrice: {
-    type: Number,
-    required: true,
-    default: 0
-  },
-  couponCode: {
-    type: String,
-    default: null
-  },
+  items: [orderItemSchema],
+  subTotal: { type: Number, required: true },
+  commissionRate: { type: Number, default: 15 },
+  commissionAmount: { type: Number, required: true },
+  sellerEarnings: { type: Number, required: true },
   status: {
     type: String,
-    enum: ['pending', 'processing', 'shipped', 'delivered', 'cancelled'],
-    default: 'pending'
+    enum: ["Hazırlanıyor", "Kargoya Verildi", "Teslim Edildi", "İptal Edildi", "İade Talebi Alındı", "İade Edildi", "processing", "shipped", "delivered", "cancelled", "returned"],
+    default: "Hazırlanıyor"
   },
-  isPaid: {
-    type: Boolean,
-    default: false
-  },
-  paidAt: {
-    type: Date
-  },
-  isDelivered: {
-    type: Boolean,
-    default: false
-  },
-  deliveredAt: {
-    type: Date
-  },
-  cargoCompany: {
-    type: String,
-    default: ''
-  },
-  trackingNumber: {
-    type: String,
-    default: ''
-  }
-}, {
-  timestamps: true
-})
+  trackingNumber: { type: String, default: null },
+  cargoCompany: { type: String, default: "Yurtiçi Kargo" }
+});
 
-// Sipariş numarası otomatik oluştur
-orderSchema.pre('save', async function(next) {
+const orderSchema = new mongoose.Schema(
+  {
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true
+    },
+    subOrders: [subOrderSchema],
+    totalAmount: {
+      type: Number,
+      required: true
+    },
+    shippingAddress: {
+      address: { type: String, required: true },
+      city: { type: String, required: true },
+      postalCode: { type: String, default: "34000" },
+      country: { type: String, default: "Türkiye" }
+    },
+    paymentMethod: {
+    type: String,
+    default: "creditCard"
+  },
+    paymentResult: {
+      id: String,
+      status: String,
+      updateTime: String
+    },
+    isPaid: {
+      type: Boolean,
+      default: false
+    },
+    paidAt: {
+      type: Date
+    }
+  },
+  { timestamps: true }
+);
+
+
+orderSchema.pre("validate", function(next) {
   if (!this.orderNumber) {
-    const year = new Date().getFullYear()
-    const count = await this.constructor.countDocuments()
-    this.orderNumber = `ORD-${year}-${String(count + 1).padStart(6, '0')}`
+    this.orderNumber = "ORD-" + Date.now() + "-" + Math.floor(1000 + Math.random() * 9000);
   }
-  next()
-})
+  if (typeof next === "function") next();
+});
 
-module.exports = mongoose.model('Order', orderSchema)
+
+orderSchema.pre("validate", function(next) {
+  if (!this.orderNumber) {
+    this.orderNumber = "ORD-" + Date.now() + "-" + Math.floor(100000 + Math.random() * 900000);
+  }
+  if (typeof next === "function") next();
+});
+
+module.exports = mongoose.model("Order", orderSchema);

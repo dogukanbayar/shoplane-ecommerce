@@ -8,7 +8,7 @@ import {
 import { Line, Bar } from 'recharts'
 import API from '../../api/axiosConfig'
 import toast from 'react-hot-toast'
-import AdvancedSEO from '../../components/seo/AdvancedSEO'
+import AdvancedSeo from '../../components/seo/AdvancedSeo'
 
 function InfluencerDashboard() {
   const [dashboard, setDashboard] = useState(null)
@@ -111,7 +111,7 @@ function InfluencerDashboard() {
 
   return (
     <>
-      <AdvancedSEO
+      <AdvancedSeo
         title="Influencer Dashboard - MyShop"
         description="Influencer paneli. Kazançlarınızı, istatistiklerinizi ve referral linklerinizi yönetin."
         keywords="influencer, referral, komisyon, kazanç"

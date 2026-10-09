@@ -53,10 +53,13 @@ exports.getAddress = async (req, res, next) => {
 // @access  Private
 exports.createAddress = async (req, res, next) => {
   try {
-    const address = await Address.create({
+    const body = {
       ...req.body,
+      address: req.body.address || req.body.addressDetail,
+      zipCode: req.body.zipCode || req.body.postalCode || "34000",
       user: req.user.id
-    })
+    };
+    const address = await Address.create(body)
 
     res.status(201).json({
       success: true,

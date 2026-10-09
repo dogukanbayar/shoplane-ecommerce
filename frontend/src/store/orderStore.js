@@ -36,6 +36,13 @@ const useOrderStore = create((set, get) => ({
     set({ loading: true, error: null })
     try {
       const data = await orderAPI.createOrder(orderData)
+      // Otomatik mock ödeme onayı
+      try {
+        await fetch(`/api/payments/mock-pay/${data.order._id}`, { method: "POST" });
+        data.order.isPaid = true;
+      } catch (payErr) {
+        console.warn("Mock ödeme tetiklenemedi:", payErr);
+      }
       set({
         orders: [data.order, ...get().orders],
         loading: false

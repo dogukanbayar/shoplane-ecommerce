@@ -1,7 +1,7 @@
 import { ArrowLeft } from 'lucide-react'
 import { useNavigate, useParams } from 'react-router-dom'
 import SessionReplayPlayer from '../../components/analytics/SessionReplayPlayer'
-import AdvancedSEO from '../../components/seo/AdvancedSEO'
+import AdvancedSeo from '../../components/seo/AdvancedSeo'
 
 function SessionReplayPage() {
   const navigate = useNavigate()
@@ -9,7 +9,7 @@ function SessionReplayPage() {
 
   return (
     <>
-      <AdvancedSEO
+      <AdvancedSeo
         title="Session Replay - MyShop Admin"
         description="Kullanıcı oturumu tekrar izle"
       />

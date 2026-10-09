@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Package, MapPin, Truck, CheckCircle, Clock, Mail, Phone, ExternalLink } from 'lucide-react'
 import API from '../../api/axiosConfig'
-import AdvancedSEO from '../../components/seo/AdvancedSEO'
+import AdvancedSeo from '../../components/seo/AdvancedSeo'
 
 function GuestOrderTracking() {
   const { token } = useParams()
@@ -97,7 +97,7 @@ function GuestOrderTracking() {
   if (showEmailSearch) {
     return (
       <>
-        <AdvancedSEO
+        <AdvancedSeo
           title="Misafir Sipariş Takibi - Siparişinizi Takip Edin | MyShop"
           description="MyShop misafir sipariş takibi. Email adresiniz ve sipariş numaranız ile kolayca siparişinizi takip edin. Anlık kargo durumu, teslimat bilgileri."
           keywords="sipariş takibi, misafir sipariş, kargo takibi, teslimat sorgulama, sipariş durumu"
@@ -215,7 +215,7 @@ function GuestOrderTracking() {
 
   return (
     <>
-      <AdvancedSEO
+      <AdvancedSeo
         title={`Sipariş Takibi #${order.orderNumber} | MyShop`}
         description={`${order.orderNumber} numaralı siparişinizin detaylarını görüntüleyin. Anlık kargo durumu, teslimat bilgileri ve sipariş özeti.`}
         keywords="sipariş detay, kargo takibi, teslimat durumu, sipariş özeti"

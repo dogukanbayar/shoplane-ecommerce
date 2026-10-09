@@ -3,27 +3,31 @@ const { MongoMemoryServer } = require('mongodb-memory-server')
 
 let mongoServer
 
-// Setup before all tests
 beforeAll(async () => {
   mongoServer = await MongoMemoryServer.create()
   const mongoUri = mongoServer.getUri()
-  
-  await mongoose.connect(mongoUri, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-  })
-})
 
-// Cleanup after each test
+  if (mongoose.connection.readyState !== 0) {
+    await mongoose.disconnect()
+  }
+
+  await mongoose.connect(mongoUri)
+}, 60000)
+
 afterEach(async () => {
-  const collections = mongoose.connection.collections
-  for (const key in collections) {
-    await collections[key].deleteMany()
+  if (mongoose.connection.readyState === 1) {
+    const collections = mongoose.connection.collections
+    for (const key in collections) {
+      await collections[key].deleteMany()
+    }
   }
 })
 
-// Teardown after all tests
 afterAll(async () => {
-  await mongoose.disconnect()
-  await mongoServer.stop()
-})
+  if (mongoose.connection.readyState !== 0) {
+    await mongoose.disconnect()
+  }
+  if (mongoServer) {
+    await mongoServer.stop()
+  }
+}, 60000)

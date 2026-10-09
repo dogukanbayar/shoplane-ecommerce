@@ -7,7 +7,7 @@ import {
 import { useNavigate } from 'react-router-dom'
 import API from '../../api/axiosConfig'
 import toast from 'react-hot-toast'
-import AdvancedSEO from '../../components/seo/AdvancedSEO'
+import AdvancedSeo from '../../components/seo/AdvancedSeo'
 
 function JourneyAnalytics() {
   const navigate = useNavigate()
@@ -51,7 +51,7 @@ function JourneyAnalytics() {
 
   return (
     <>
-      <AdvancedSEO
+      <AdvancedSeo
         title="Customer Journey Analytics - MyShop Admin"
         description="Müşteri yolculuk haritası ve touchpoint analizi"
       />

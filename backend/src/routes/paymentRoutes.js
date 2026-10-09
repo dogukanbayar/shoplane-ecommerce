@@ -1,12 +1,13 @@
-const express = require('express')
-const router = express.Router()
+const express = require("express");
+const router = express.Router();
 const {
-  initiatePayment,
-  initiate3DPayment
-} = require('../controllers/paymentController')
-const { protect } = require('../middleware/auth')
+  initializePayment,
+  paymentCallback,
+  mockPaymentSuccess
+} = require("../controllers/paymentController");
 
-router.post('/checkout', protect, initiatePayment)
-router.post('/3d-secure', protect, initiate3DPayment)
+router.post("/initialize/:orderId", initializePayment);
+router.post("/callback", paymentCallback);
+router.post("/mock-pay/:orderId", mockPaymentSuccess);
 
-module.exports = router
+module.exports = router;

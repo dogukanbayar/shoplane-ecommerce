@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom'
 import API from '../../api/axiosConfig'
 import toast from 'react-hot-toast'
 import useAuthStore from '../../store/authStore'
-import AdvancedSEO from '../../components/seo/AdvancedSEO'
+import AdvancedSeo from '../../components/seo/AdvancedSeo'
 
 function LoyaltyDashboard() {
   const navigate = useNavigate()
@@ -87,7 +87,7 @@ function LoyaltyDashboard() {
 
   return (
     <>
-      <AdvancedSEO
+      <AdvancedSeo
         title="Loyalty Program - MyShop"
         description="Earn points, unlock rewards, and enjoy exclusive benefits"
       />

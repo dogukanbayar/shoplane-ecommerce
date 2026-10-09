@@ -1,90 +1,14 @@
-const Product = require('../models/Product')
+const productService = require('../services/productService')
 
 // @desc    Tüm ürünleri getir
 // @route   GET /api/products
 // @access  Public
 exports.getProducts = async (req, res, next) => {
   try {
-    const {
-      keyword,
-      category,
-      brand,
-      minPrice,
-      maxPrice,
-      color,
-      size,
-      rating,
-      sort,
-      page = 1,
-      limit = 12
-    } = req.query
-
-    // Query oluştur
-    let query = { isActive: true }
-
-    // Arama
-    if (keyword) {
-      query.$text = { $search: keyword }
-    }
-
-    // Filtreler
-    if (category) {
-      query.category = category
-    }
-
-    if (brand) {
-      query.brand = brand
-    }
-
-    if (minPrice || maxPrice) {
-      query.price = {}
-      if (minPrice) query.price.$gte = Number(minPrice)
-      if (maxPrice) query.price.$lte = Number(maxPrice)
-    }
-
-    if (color) {
-      query.colors = { $in: [color] }
-    }
-
-    if (size) {
-      query.sizes = { $in: [size] }
-    }
-
-    if (rating) {
-      query.rating = { $gte: Number(rating) }
-    }
-
-    // Sıralama
-    let sortOptions = {}
-    if (sort === 'price-asc') {
-      sortOptions = { price: 1 }
-    } else if (sort === 'price-desc') {
-      sortOptions = { price: -1 }
-    } else if (sort === 'rating') {
-      sortOptions = { rating: -1 }
-    } else if (sort === 'newest') {
-      sortOptions = { createdAt: -1 }
-    } else {
-      sortOptions = { createdAt: -1 } // Default
-    }
-
-    // Pagination
-    const skip = (page - 1) * limit
-    const total = await Product.countDocuments(query)
-
-    // Ürünleri getir
-    const products = await Product.find(query)
-      .sort(sortOptions)
-      .skip(skip)
-      .limit(Number(limit))
-
+    const result = await productService.getProducts(req.query)
     res.status(200).json({
       success: true,
-      count: products.length,
-      total,
-      pages: Math.ceil(total / limit),
-      currentPage: Number(page),
-      products
+      ...result
     })
   } catch (error) {
     next(error)
@@ -96,20 +20,15 @@ exports.getProducts = async (req, res, next) => {
 // @access  Public
 exports.getProduct = async (req, res, next) => {
   try {
-    const product = await Product.findById(req.params.id)
-
-    if (!product) {
-      return res.status(404).json({
-        success: false,
-        message: 'Ürün bulunamadı'
-      })
-    }
-
+    const product = await productService.getProductById(req.params.id)
     res.status(200).json({
       success: true,
       product
     })
   } catch (error) {
+    if (error.statusCode === 404) {
+      return res.status(404).json({ success: false, message: error.message })
+    }
     next(error)
   }
 }
@@ -119,10 +38,7 @@ exports.getProduct = async (req, res, next) => {
 // @access  Public
 exports.getFeaturedProducts = async (req, res, next) => {
   try {
-    const products = await Product.find({ isFeatured: true, isActive: true })
-      .limit(6)
-      .sort({ createdAt: -1 })
-
+    const products = await productService.getFeaturedProducts(req.query.limit || 6)
     res.status(200).json({
       success: true,
       count: products.length,
@@ -138,8 +54,7 @@ exports.getFeaturedProducts = async (req, res, next) => {
 // @access  Private/Admin
 exports.createProduct = async (req, res, next) => {
   try {
-    const product = await Product.create(req.body)
-
+    const product = await productService.createProduct(req.body)
     res.status(201).json({
       success: true,
       product
@@ -154,25 +69,15 @@ exports.createProduct = async (req, res, next) => {
 // @access  Private/Admin
 exports.updateProduct = async (req, res, next) => {
   try {
-    let product = await Product.findById(req.params.id)
-
-    if (!product) {
-      return res.status(404).json({
-        success: false,
-        message: 'Ürün bulunamadı'
-      })
-    }
-
-    product = await Product.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true
-    })
-
+    const product = await productService.updateProduct(req.params.id, req.body)
     res.status(200).json({
       success: true,
       product
     })
   } catch (error) {
+    if (error.statusCode === 404) {
+      return res.status(404).json({ success: false, message: error.message })
+    }
     next(error)
   }
 }
@@ -182,22 +87,15 @@ exports.updateProduct = async (req, res, next) => {
 // @access  Private/Admin
 exports.deleteProduct = async (req, res, next) => {
   try {
-    const product = await Product.findById(req.params.id)
-
-    if (!product) {
-      return res.status(404).json({
-        success: false,
-        message: 'Ürün bulunamadı'
-      })
-    }
-
-    await product.deleteOne()
-
+    await productService.deleteProduct(req.params.id)
     res.status(200).json({
       success: true,
       message: 'Ürün silindi'
     })
   } catch (error) {
+    if (error.statusCode === 404) {
+      return res.status(404).json({ success: false, message: error.message })
+    }
     next(error)
   }
 }
@@ -207,8 +105,7 @@ exports.deleteProduct = async (req, res, next) => {
 // @access  Public
 exports.getCategories = async (req, res, next) => {
   try {
-    const categories = await Product.distinct('category')
-
+    const categories = await productService.getCategories()
     res.status(200).json({
       success: true,
       categories
@@ -223,8 +120,7 @@ exports.getCategories = async (req, res, next) => {
 // @access  Public
 exports.getBrands = async (req, res, next) => {
   try {
-    const brands = await Product.distinct('brand')
-
+    const brands = await productService.getBrands()
     res.status(200).json({
       success: true,
       brands
@@ -239,37 +135,19 @@ exports.getBrands = async (req, res, next) => {
 // @access  Public
 exports.getFrequentlyBoughtTogether = async (req, res, next) => {
   try {
-    const { id } = req.params
-    const limit = req.query.limit || 4
-
-    // Get the current product
-    const product = await Product.findById(id)
-    if (!product) {
-      return res.status(404).json({
-        success: false,
-        message: 'Product not found'
-      })
-    }
-
-    // Find products from the same category (excluding the current product)
-    // and products with similar tags or attributes
-    const relatedProducts = await Product.find({
-      _id: { $ne: id },
-      $or: [
-        { category: product.category },
-        { brand: product.brand }
-      ],
-      isActive: true
-    })
-      .limit(Number(limit))
-      .lean()
-
+    const products = await productService.getFrequentlyBoughtTogether(
+      req.params.id,
+      req.query.limit
+    )
     res.status(200).json({
       success: true,
-      count: relatedProducts.length,
-      products: relatedProducts
+      count: products.length,
+      products
     })
   } catch (error) {
+    if (error.statusCode === 404) {
+      return res.status(404).json({ success: false, message: error.message })
+    }
     next(error)
   }
 }

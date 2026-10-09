@@ -4,7 +4,7 @@ import { FlaskConical, Plus, Trash2, Save } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import API from '../../api/axiosConfig'
 import toast from 'react-hot-toast'
-import AdvancedSEO from '../../components/seo/AdvancedSEO'
+import AdvancedSeo from '../../components/seo/AdvancedSeo'
 
 function CreateExperiment() {
   const navigate = useNavigate()
@@ -99,7 +99,7 @@ function CreateExperiment() {
 
   return (
     <>
-      <AdvancedSEO
+      <AdvancedSeo
         title="Create A/B Test - MyShop Admin"
         description="Yeni A/B test oluştur"
       />

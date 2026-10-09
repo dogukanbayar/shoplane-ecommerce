@@ -3,7 +3,7 @@ import { motion } from 'framer-motion'
 import { Flame, ArrowLeft } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import HeatmapViewer from '../../components/analytics/HeatmapViewer'
-import AdvancedSEO from '../../components/seo/AdvancedSEO'
+import AdvancedSeo from '../../components/seo/AdvancedSeo'
 
 function HeatmapsPage() {
   const navigate = useNavigate()
@@ -18,7 +18,7 @@ function HeatmapsPage() {
 
   return (
     <>
-      <AdvancedSEO
+      <AdvancedSeo
         title="Heatmaps - MyShop Admin"
         description="Kullanıcı tıklama ve dikkat heatmap analizi"
       />

@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async'
 
-function AdvancedSEO({
+function AdvancedSeo({
   title = 'MyShop - Türkiye\'nin En İyi Online Alışveriş Sitesi',
   description = 'MyShop\'ta binlerce ürün arasından seçim yapın. Elektronik, giyim, kozmetik ve daha fazlası. Ücretsiz kargo, hızlı teslimat, güvenli ödeme. Türkiye\'nin en güvenilir e-ticaret platformu.',
   keywords = 'online alışveriş, e-ticaret, elektronik, giyim, ayakkabı, kozmetik, ev dekorasyon, spor, indirim, kampanya, ücretsiz kargo',
@@ -246,4 +246,4 @@ function AdvancedSEO({
   )
 }
 
-export default AdvancedSEO
+export default AdvancedSeo

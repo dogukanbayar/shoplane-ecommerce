@@ -3,7 +3,7 @@ import { motion } from 'framer-motion'
 import { Award, TrendingUp, Users, Star } from 'lucide-react'
 import API from '../../api/axiosConfig'
 import toast from 'react-hot-toast'
-import AdvancedSEO from '../../components/seo/AdvancedSEO'
+import AdvancedSeo from '../../components/seo/AdvancedSeo'
 
 function LoyaltyStats() {
   const [stats, setStats] = useState(null)
@@ -41,7 +41,7 @@ function LoyaltyStats() {
 
   return (
     <>
-      <AdvancedSEO
+      <AdvancedSeo
         title="Loyalty Stats - MyShop Admin"
         description="Loyalty program statistics and analytics"
       />

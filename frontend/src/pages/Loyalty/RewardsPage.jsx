@@ -4,7 +4,7 @@ import { Gift, Star, ShoppingBag, Truck, CreditCard, Award } from 'lucide-react'
 import API from '../../api/axiosConfig'
 import toast from 'react-hot-toast'
 import useAuthStore from '../../store/authStore'
-import AdvancedSEO from '../../components/seo/AdvancedSEO'
+import AdvancedSeo from '../../components/seo/AdvancedSeo'
 
 function RewardsPage() {
   const { user } = useAuthStore()
@@ -97,7 +97,7 @@ function RewardsPage() {
 
   return (
     <>
-      <AdvancedSEO
+      <AdvancedSeo
         title="Rewards Catalog - MyShop"
         description="Redeem your loyalty points for exclusive rewards"
       />

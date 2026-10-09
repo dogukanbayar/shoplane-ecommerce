@@ -5,7 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import API from '../../api/axiosConfig'
 import toast from 'react-hot-toast'
 import FunnelVisualization from '../../components/funnel/FunnelVisualization'
-import AdvancedSEO from '../../components/seo/AdvancedSEO'
+import AdvancedSeo from '../../components/seo/AdvancedSeo'
 
 function FunnelAnalytics() {
   const navigate = useNavigate()
@@ -59,7 +59,7 @@ function FunnelAnalytics() {
 
   return (
     <>
-      <AdvancedSEO
+      <AdvancedSeo
         title={`${funnel.name} - Analytics`}
         description="Funnel analytics ve dönüşüm analizi"
       />

@@ -5,15 +5,18 @@ import BottomNav from '../../components/layout/BottomNav'
 import CartItem from '../../components/Cart/CartItem'
 import CartSummary from '../../components/Cart/CartSummary'
 import EmptyCart from '../../components/Cart/EmptyCart'
-import { Package, Trash2, ArrowLeft } from 'lucide-react'
-import useCartStore from '../../store/cartStore'
+import { Package, Trash2, ArrowLeft, Store } from 'lucide-react'
+import { useCartStore } from '../../store/cartStore'
 import { Link } from 'react-router-dom'
 
 function CartPage() {
-  const { items, bundles, removeBundleFromCart, updateBundleQuantity, clearCart } = useCartStore()
+  const { items = [], bundles = [], removeBundleFromCart, updateBundleQuantity, clearCart } = useCartStore()
   
-  // Set optimized meta description for SEO
-  useMetaDescription(metaDescriptions.cart.description.replace('{itemCount}', items.length + (bundles.length || 0)), metaDescriptions.cart.title)
+  const totalCount = (items?.length || 0) + (bundles?.length || 0)
+  useMetaDescription(
+    metaDescriptions?.cart?.description?.replace('{itemCount}', totalCount) || 'Sepetim', 
+    metaDescriptions?.cart?.title || 'Sepetim | ShopLane'
+  )
 
   const handleClearCart = () => {
     if (confirm('Sepetinizdeki tüm ürünleri silmek istediğinizden emin misiniz?')) {
@@ -43,14 +46,13 @@ function CartPage() {
           </Link>
         </div>
 
-        {items.length === 0 ? (
+        {items.length === 0 && bundles.length === 0 ? (
           <EmptyCart />
         ) : (
           <>
-            {/* Başlık */}
             <div className="flex items-center justify-between mb-8">
               <h1 className="text-4xl font-bold">
-                Sepetim ({items.length} ürün)
+                Sepetim ({totalCount} ürün)
               </h1>
               <button
                 onClick={handleClearCart}
@@ -64,9 +66,50 @@ function CartPage() {
             <div className="grid lg:grid-cols-3 gap-8">
               {/* Sol: Ürün Listesi */}
               <div className="lg:col-span-2 space-y-4">
-                {items.map(item => (
-                  <CartItem key={item.cartId} item={item} />
-                ))}
+                {(() => {
+                  const groupedItems = (items || []).reduce((acc, item) => {
+                    const sellerKey = item.product?.seller?._id || item.seller?._id || "default"
+                    const sellerName = item.product?.seller?.storeName || item.seller?.storeName || "ShopLane Resmi Satıcı"
+                    const sellerRating = item.product?.seller?.rating || item.seller?.rating || "4.8"
+
+                    if (!acc[sellerKey]) {
+                      acc[sellerKey] = {
+                        name: sellerName,
+                        rating: sellerRating,
+                        items: []
+                      }
+                    }
+                    acc[sellerKey].items.push(item)
+                    return acc
+                  }, {})
+
+                  return Object.entries(groupedItems).map(([sId, group]) => (
+                    <div key={sId} className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-6">
+                      <div className="bg-gray-50/80 px-5 py-3.5 border-b border-gray-200 flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <Store className="w-4 h-4 text-orange-500" />
+                          <span className="font-bold text-gray-800 text-sm">
+                            Satıcı: <Link className="text-orange-600 hover:underline" to={`/sellers/${sId}`}>{group.name}</Link>
+                          </span>
+                          <span className="bg-orange-100 text-orange-700 font-bold px-1.5 py-0.5 rounded text-[11px]">
+                            ⭐ {group.rating}
+                          </span>
+                        </div>
+                        <span className="text-xs text-green-600 font-semibold bg-green-50 px-2 py-1 rounded">
+                          ✓ Hızlı Gönderi
+                        </span>
+                      </div>
+
+                      <div className="p-4 space-y-4 divide-y divide-gray-100">
+                        {group.items.map((item, idx) => (
+                          <div key={item.cartId || item._id || item.id || `item-${idx}`} className="pt-3 first:pt-0">
+                            <CartItem item={item} />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))
+                })()}
               </div>
 
               {/* Sağ: Sepet Özeti */}
@@ -77,23 +120,22 @@ function CartPage() {
 
             {/* Bundles Section */}
             {bundles.length > 0 && (
-              <div className="mb-8">
+              <div className="mb-8 mt-6">
                 <div className="flex items-center gap-3 mb-4">
                   <Package size={28} className="text-purple-600" />
                   <h2 className="text-2xl font-bold dark:text-dark-text">
-                    Bundles ({bundles.length})
+                    Paketler ({bundles.length})
                   </h2>
                 </div>
                 <div className="space-y-4">
                   {bundles.map((bundleItem, index) => (
                     <div
-                      key={index}
-                      className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border border-purple-200 dark:border-purple-900 rounded-2xl p-6"
+                      key={`bundle-${bundleItem.bundle?._id || index}`}
+                      className="bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200 rounded-2xl p-6"
                     >
                       <div className="flex items-start gap-4">
-                        {/* Bundle Image */}
-                        <div className="w-24 h-24 rounded-xl overflow-hidden flex-shrink-0 bg-white dark:bg-dark-card">
-                          {bundleItem.bundle.images?.[0] ? (
+                        <div className="w-24 h-24 rounded-xl overflow-hidden flex-shrink-0 bg-white">
+                          {bundleItem.bundle?.images?.[0] ? (
                             <img
                               src={bundleItem.bundle.images[0]}
                               alt={bundleItem.bundle.name}
@@ -105,78 +147,63 @@ function CartPage() {
                             </div>
                           )}
                         </div>
-                        {/* Bundle Info */}
                         <div className="flex-1">
-                          <h3 className="text-lg font-bold mb-2 dark:text-dark-text">
-                            {bundleItem.bundle.name}
+                          <h3 className="text-lg font-bold mb-2">
+                            {bundleItem.bundle?.name || "Özel Paket"}
                           </h3>
-                          {/* Products in Bundle */}
                           <div className="mb-3">
-                            <p className="text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1">
-                              Includes:
+                            <p className="text-xs font-semibold text-gray-600 mb-1">
+                              İçerik:
                             </p>
                             <div className="flex flex-wrap gap-2">
-                              {bundleItem.bundle.products.map((item, idx) => (
+                              {bundleItem.bundle?.products?.map((item, idx) => (
                                 <span
-                                  key={idx}
-                                  className="px-2 py-1 bg-white dark:bg-dark-card rounded text-xs"
+                                  key={`prod-${idx}`}
+                                  className="px-2 py-1 bg-white rounded text-xs border border-purple-100"
                                 >
-                                  {item.product.name} x{item.quantity}
+                                  {item.product?.name || "Ürün"} x{item.quantity}
                                 </span>
                               ))}
                             </div>
                           </div>
-                          {/* Price & Savings */}
                           <div className="flex items-baseline gap-2">
                             <span className="text-2xl font-bold text-purple-600">
-                              {bundleItem.price.toFixed(2)}₺
+                              {Number(bundleItem.price || 0).toFixed(2)}₺
                             </span>
-                            {bundleItem.bundle.pricing.originalPrice !== bundleItem.bundle.pricing.finalPrice && (
-                              <>
-                                <span className="text-lg text-gray-500 line-through">
-                                  {bundleItem.bundle.pricing.originalPrice.toFixed(2)}₺
-                                </span>
-                                <span className="text-sm font-semibold text-green-600">
-                                  Save {bundleItem.bundle.pricing.savings.toFixed(2)}₺
-                                </span>
-                              </>
-                            )}
                           </div>
                         </div>
-                        {/* Quantity Controls */}
                         <div className="flex items-center gap-3">
                           <button
                             onClick={() => updateBundleQuantity(
-                              bundleItem.bundle._id,
+                              bundleItem.bundle?._id,
                               bundleItem.selectedProducts,
-                              bundleItem.quantity - 1
+                              (bundleItem.quantity || 1) - 1
                             )}
-                            className="w-8 h-8 bg-white dark:bg-dark-card border-2 border-gray-200 dark:border-dark-border rounded-lg hover:bg-gray-100 dark:hover:bg-dark-hover transition"
+                            className="w-8 h-8 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 transition"
                           >
                             -
                           </button>
-                          <span className="w-12 text-center font-bold dark:text-dark-text">
-                            {bundleItem.quantity}
+                          <span className="w-8 text-center font-bold">
+                            {bundleItem.quantity || 1}
                           </span>
                           <button
                             onClick={() => updateBundleQuantity(
-                              bundleItem.bundle._id,
+                              bundleItem.bundle?._id,
                               bundleItem.selectedProducts,
-                              bundleItem.quantity + 1
+                              (bundleItem.quantity || 1) + 1
                             )}
-                            className="w-8 h-8 bg-white dark:bg-dark-card border-2 border-gray-200 dark:border-dark-border rounded-lg hover:bg-gray-100 dark:hover:bg-dark-hover transition"
+                            className="w-8 h-8 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 transition"
                           >
                             +
                           </button>
                         </div>
-                        {/* Total & Remove */}
                         <div className="text-right">
-                          <p className="text-2xl font-bold mb-2 dark:text-dark-text">
-                            {(bundleItem.price * bundleItem.quantity).toFixed(2)}₺
+                          <p className="text-2xl font-bold mb-2">
+                            {(Number(bundleItem.price || 0) * Number(bundleItem.quantity || 1)).toFixed(2)}₺
                           </p>
                           <button
                             onClick={() => removeBundleFromCart(
-                              bundleItem.bundle._id,
+                              bundleItem.bundle?._id,
                               bundleItem.selectedProducts
                             )}
                             className="text-red-600 hover:text-red-700 transition"

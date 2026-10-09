@@ -1,38 +1,90 @@
-version: '3.8'
-
 services:
-  backend:
-    build: ./backend
+  mongodb:
+    image: mongo:6.0
+    container_name: shoplane_mongodb
+    restart: always
     ports:
-      - "5000:5000"
+      - "27018:27017"
     environment:
-      - NODE_ENV=production
-      - MONGO_URI=${MONGO_URI}
-      - JWT_SECRET=${JWT_SECRET}
+      MONGO_INITDB_DATABASE: shoplane
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - shoplane_network
+
+  redis:
+    image: redis:7-alpine
+    container_name: shoplane_redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - shoplane_network
+
+  meilisearch:
+    image: getmeili/meilisearch:v1.6
+    container_name: shoplane_meilisearch
+    restart: always
+    ports:
+      - "7700:7700"
+    environment:
+      MEILI_MASTER_KEY: shoplane_meili_secret_2026
+      MEILI_ENV: development
+    volumes:
+      - meili_data:/meili_data
+    networks:
+      - shoplane_network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: shoplane_backend
+    restart: always
+    ports:
+      - "5001:5001"
+    environment:
+      NODE_ENV: production
+      PORT: 5001
+      MONGODB_URI: mongodb://mongodb:27017/shoplane
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      MEILISEARCH_HOST: http://meilisearch:7700
+      MEILISEARCH_KEY: shoplane_meili_secret_2026
+      JWT_SECRET: shoplane_super_secret_jwt_key_2026
+      JWT_ACCESS_SECRET: shoplane_super_secret_access_key_2026
+      JWT_REFRESH_SECRET: shoplane_super_secret_refresh_key_2026
+      JWT_ACCESS_EXPIRE: 15m
+      JWT_REFRESH_EXPIRE: 7d
     depends_on:
       - mongodb
-    restart: unless-stopped
-    volumes:
-      - ./backend/logs:/app/logs
-
-  mongodb:
-    image: mongo:7
-    ports:
-      - "27017:27017"
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USER}
-      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
-    volumes:
-      - mongodb_data:/data/db
-    restart: unless-stopped
+      - redis
+      - meilisearch
+    networks:
+      - shoplane_network
 
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: shoplane_frontend
+    restart: always
     ports:
-      - "80:80"
+      - "5173:5173"
+    environment:
+      VITE_API_URL: http://localhost:5001/api
     depends_on:
       - backend
-    restart: unless-stopped
+    networks:
+      - shoplane_network
 
 volumes:
-  mongodb_data:
+  mongo_data:
+  redis_data:
+  meili_data:
+
+networks:
+  shoplane_network:
+    driver: bridge

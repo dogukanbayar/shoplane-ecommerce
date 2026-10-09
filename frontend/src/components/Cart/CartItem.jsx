@@ -1,12 +1,20 @@
 import { Trash2, Plus, Minus } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import useCartStore from '../../store/cartStore'
+import { useCartStore } from '../../store/cartStore'
 
 function CartItem({ item }) {
   const { updateQuantity, removeItem } = useCartStore()
 
+  // Veri fallback alanları
+  const prod = item.product || item
+  const productId = prod._id || prod.id || item._id || item.id
+  const name = prod.name || item.name || 'Ürün'
+  const image = prod.images?.[0] || prod.image || item.image || 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300&q=80'
+  const price = Number(item.price ?? prod.price ?? 0)
+  const stock = prod.stock ?? item.stock ?? 99
+
   const handleIncrease = () => {
-    if (item.quantity < item.stock) {
+    if (item.quantity < stock) {
       updateQuantity(item.cartId, item.quantity + 1)
     } else {
       alert('Maksimum stok miktarına ulaştınız!')
@@ -20,81 +28,70 @@ function CartItem({ item }) {
   }
 
   const handleRemove = () => {
-    if (confirm(`${item.name} sepetten kaldırılsın mı?`)) {
+    if (confirm(`${name} sepetten kaldırılsın mı?`)) {
       removeItem(item.cartId)
     }
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-md p-6 flex gap-6 hover:shadow-lg transition">
+    <div className="bg-white rounded-xl p-4 flex gap-4 hover:shadow-sm transition items-center">
       {/* Ürün Resmi */}
-      <Link to={`/products/${item.id}`} className="flex-shrink-0">
+      <Link to={`/products/${productId}`} className="flex-shrink-0">
         <img
-          src={item.image}
-          alt={item.name}
-          className="w-32 h-32 object-cover rounded-lg hover:scale-105 transition"
+          src={image}
+          alt={name}
+          className="w-24 h-24 object-cover rounded-lg border border-gray-100 hover:scale-105 transition"
+          onError={(e) => {
+            e.target.onerror = null;
+            e.target.src = 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300&q=80';
+          }}
         />
       </Link>
 
       {/* Ürün Bilgileri */}
-      <div className="flex-1">
-        <Link to={`/products/${item.id}`}>
-          <h3 className="text-xl font-semibold mb-2 hover:text-blue-600 transition">
-            {item.name}
+      <div className="flex-1 min-w-0">
+        <Link to={`/products/${productId}`}>
+          <h3 className="text-base font-semibold text-gray-900 truncate hover:text-blue-600 transition">
+            {name}
           </h3>
         </Link>
         
-        <div className="flex flex-wrap gap-4 text-sm text-gray-600 mb-4">
-          <div>
-            <span className="font-semibold">Beden:</span> {item.size}
-          </div>
-          <div>
-            <span className="font-semibold">Renk:</span> {item.color}
-          </div>
-          <div>
-            <span className="font-semibold">Marka:</span> {item.brand}
-          </div>
+        <div className="flex flex-wrap gap-3 text-xs text-gray-500 my-1.5">
+          {item.size && (
+            <span><strong className="text-gray-700">Beden:</strong> {item.size}</span>
+          )}
+          {item.color && (
+            <span><strong className="text-gray-700">Renk:</strong> {item.color}</span>
+          )}
         </div>
 
-        {/* Fiyat ve Miktar Kontrolü */}
-        <div className="flex items-center justify-between">
-          {/* Miktar Kontrolü */}
-          <div className="flex items-center gap-3">
+        {/* Miktar ve Fiyat */}
+        <div className="flex items-center justify-between mt-3">
+          <div className="flex items-center gap-2">
             <button
               onClick={handleDecrease}
-              className="w-10 h-10 rounded-lg border-2 border-gray-300 hover:border-gray-400 flex items-center justify-center transition"
-              disabled={item.quantity === 1}
+              className="w-8 h-8 rounded-lg border border-gray-200 hover:bg-gray-50 flex items-center justify-center transition"
+              disabled={item.quantity <= 1}
             >
-              <Minus size={18} />
+              <Minus size={14} />
             </button>
             
-            <input
-              type="text"
-              value={item.quantity}
-              readOnly
-              className="w-16 h-10 text-center border-2 border-gray-300 rounded-lg font-semibold"
-            />
+            <span className="w-10 text-center font-semibold text-sm">
+              {item.quantity}
+            </span>
             
             <button
               onClick={handleIncrease}
-              className="w-10 h-10 rounded-lg border-2 border-gray-300 hover:border-gray-400 flex items-center justify-center transition"
-              disabled={item.quantity >= item.stock}
+              className="w-8 h-8 rounded-lg border border-gray-200 hover:bg-gray-50 flex items-center justify-center transition"
+              disabled={item.quantity >= stock}
             >
-              <Plus size={18} />
+              <Plus size={14} />
             </button>
-
-            <span className="text-sm text-gray-500 ml-2">
-              (Stok: {item.stock})
-            </span>
           </div>
 
-          {/* Fiyat */}
           <div className="text-right">
-            <div className="text-2xl font-bold text-blue-600">
-              ₺{(item.price * item.quantity).toFixed(2)}
-            </div>
-            <div className="text-sm text-gray-500">
-              Birim: ₺{item.price.toFixed(2)}
+            <div className="text-lg font-bold text-blue-600">
+              ₺{(price * item.quantity).toFixed(2)}
             </div>
           </div>
         </div>
@@ -103,10 +100,10 @@ function CartItem({ item }) {
       {/* Sil Butonu */}
       <button
         onClick={handleRemove}
-        className="flex-shrink-0 p-3 h-fit rounded-lg hover:bg-red-50 text-red-500 transition"
+        className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition ml-2"
         title="Sepetten Kaldır"
       >
-        <Trash2 size={20} />
+        <Trash2 size={18} />
       </button>
     </div>
   )

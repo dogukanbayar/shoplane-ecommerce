@@ -7,7 +7,7 @@ import {
 import { useNavigate } from 'react-router-dom'
 import API from '../../api/axiosConfig'
 import toast from 'react-hot-toast'
-import AdvancedSEO from '../../components/seo/AdvancedSEO'
+import AdvancedSeo from '../../components/seo/AdvancedSeo'
 
 function ExperimentManager() {
   const navigate = useNavigate()
@@ -109,7 +109,7 @@ function ExperimentManager() {
 
   return (
     <>
-      <AdvancedSEO
+      <AdvancedSeo
         title="A/B Test Manager - MyShop Admin"
         description="A/B testleri yönetin, conversion optimizasyonu yapın"
       />

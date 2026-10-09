@@ -279,28 +279,21 @@ function Navbar() {
               )}
 
               {/* Shopping Cart - Premium Badge */}
-              <motion.div whileHover={{ scale: 1.12 }} whileTap={{ scale: 0.95 }} className="p-2.5 hover:bg-gradient-to-br hover:from-orange-50 hover:to-red-50 dark:hover:from-orange-900/20 dark:hover:to-red-900/20 rounded-xl transition-all duration-300">
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="relative">
                 <Link 
                   to="/cart" 
-                  className="relative p-0 hover:opacity-80 transition-all duration-300 group"
+                  className="relative flex items-center justify-center p-2.5 rounded-xl hover:bg-orange-50 dark:hover:bg-orange-900/20 text-gray-800 dark:text-gray-100 transition-colors group"
                   aria-label="Sepet"
                 >
-                  <ShoppingCart size={22} className="dark:text-dark-text text-gray-800 group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors" />
+                  <ShoppingCart size={24} className="group-hover:text-orange-600 transition-colors flex-shrink-0" />
                   
-                  {/* Premium Badge */}
-                  <AnimatePresence>
-                    {totalItems > 0 && (
-                      <motion.span
-                        initial={{ scale: 0, rotate: -180 }}
-                        animate={{ scale: 1, rotate: 0 }}
-                        exit={{ scale: 0, rotate: 180 }}
-                        transition={{ type: 'spring', stiffness: 200 }}
-                        className="absolute -top-1 -right-1 bg-gradient-to-br from-orange-500 to-red-600 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center shadow-xl ring-2 ring-white dark:ring-dark-bg"
-                      >
-                        {totalItems > 99 ? '99+' : totalItems}
-                      </motion.span>
-                    )}
-                  </AnimatePresence>
+                  {totalItems > 0 && (
+                    <span
+                      className="absolute -top-1 -right-1 bg-gradient-to-r from-orange-500 to-red-600 text-white text-[11px] font-bold rounded-full min-w-[20px] h-5 px-1 flex items-center justify-center shadow-md ring-2 ring-white dark:ring-gray-900"
+                    >
+                      {totalItems > 99 ? "99+" : totalItems}
+                    </span>
+                  )}
                 </Link>
               </motion.div>
             </div>

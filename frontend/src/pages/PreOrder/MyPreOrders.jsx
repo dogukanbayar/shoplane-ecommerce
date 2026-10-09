@@ -4,7 +4,7 @@ import { Package, Calendar, CreditCard, Truck, Clock, X } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import API from '../../api/axiosConfig'
 import toast from 'react-hot-toast'
-import AdvancedSEO from '../../components/seo/AdvancedSEO'
+import AdvancedSeo from '../../components/seo/AdvancedSeo'
 
 function MyPreOrders() {
     const navigate = useNavigate()
@@ -111,7 +111,7 @@ function MyPreOrders() {
 
     return (
         <>
-            <AdvancedSEO
+            <AdvancedSeo
                 title="Ön Siparişlerim - MyShop"
                 description="Ön siparişlerinizi görüntüleyin, takip edin ve ödemelerinizi yapın."
                 keywords="ön sipariş, sipariş takibi, ön ödeme"

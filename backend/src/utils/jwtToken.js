@@ -1,36 +1,45 @@
-// JWT token oluştur ve cookie'ye kaydet
-const sendToken = (user, statusCode, res) => {
-  // Token oluştur
-  const token = user.generateAuthToken()
-
-  // Cookie options
-  const options = {
-    expires: new Date(
-      Date.now() + process.env.JWT_COOKIE_EXPIRE * 24 * 60 * 60 * 1000
-    ),
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict'
-  }
-
-  // Kullanıcı objesinden şifreyi çıkar
-  const userResponse = user.toObject()
-  delete userResponse.password
-
-  res.status(statusCode).cookie('token', token, options).json({
-    success: true,
-    user: userResponse,
-    token
-  })
-}
-
-// User modeline token üretme metodu ekle
 const jwt = require('jsonwebtoken')
 
-const generateAuthToken = function() {
-  return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRE
-  })
+const generateAccessToken = (user) => {
+  return jwt.sign(
+    { id: user._id, role: user.role },
+    process.env.JWT_SECRET || 'shoplane_default_jwt_secret',
+    { expiresIn: process.env.JWT_ACCESS_EXPIRE || '15m' }
+  )
 }
 
-module.exports = { sendToken, generateAuthToken }
+const generateRefreshToken = (user) => {
+  return jwt.sign(
+    { id: user._id },
+    process.env.JWT_REFRESH_SECRET || 'shoplane_default_refresh_secret',
+    { expiresIn: process.env.JWT_REFRESH_EXPIRE || '7d' }
+  )
+}
+
+const sendToken = (user, statusCode, res) => {
+  const accessToken = generateAccessToken(user)
+  const refreshToken = generateRefreshToken(user)
+
+  const cookieOptions = {
+    expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax'
+  }
+
+  const userResponse = user.toObject ? user.toObject() : { ...user }
+  delete userResponse.password
+
+  res
+    .status(statusCode)
+    .cookie('refreshToken', refreshToken, cookieOptions)
+    .cookie('token', accessToken, { ...cookieOptions, expires: new Date(Date.now() + 15 * 60 * 1000) })
+    .json({
+      success: true,
+      user: userResponse,
+      accessToken,
+      token: accessToken
+    })
+}
+
+module.exports = { sendToken, generateAccessToken, generateRefreshToken }

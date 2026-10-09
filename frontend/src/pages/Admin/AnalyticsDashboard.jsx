@@ -7,7 +7,7 @@ import {
 import { useNavigate } from 'react-router-dom'
 import API from '../../api/axiosConfig'
 import toast from 'react-hot-toast'
-import AdvancedSEO from '../../components/seo/AdvancedSEO'
+import AdvancedSeo from '../../components/seo/AdvancedSeo'
 
 function AnalyticsDashboard() {
   const navigate = useNavigate()
@@ -67,7 +67,7 @@ function AnalyticsDashboard() {
 
   return (
     <>
-      <AdvancedSEO
+      <AdvancedSeo
         title="Analytics Dashboard - MyShop Admin"
         description="Kullanıcı davranış analizi, heatmaps ve session recordings"
       />

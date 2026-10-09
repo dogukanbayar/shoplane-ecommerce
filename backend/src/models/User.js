@@ -17,7 +17,8 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     minlength: 6,
-    default: null
+    default: null,
+    select: false
   },
   phone: {
     type: String,
@@ -25,7 +26,7 @@ const userSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ['user', 'admin'],
+    enum: ['user', 'admin', "seller"],
     default: 'user'
   },
   avatar: {

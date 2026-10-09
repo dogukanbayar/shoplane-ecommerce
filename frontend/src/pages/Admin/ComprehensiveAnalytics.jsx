@@ -20,7 +20,7 @@ import {
 } from 'chart.js'
 import API from '../../api/axiosConfig'
 import toast from 'react-hot-toast'
-import AdvancedSEO from '../../components/seo/AdvancedSEO'
+import AdvancedSeo from '../../components/seo/AdvancedSeo'
 
 ChartJS.register(
   CategoryScale,
@@ -118,7 +118,7 @@ function ComprehensiveAnalytics() {
 
   return (
     <>
-      <AdvancedSEO
+      <AdvancedSeo
         title="Comprehensive Analytics - MyShop Admin"
         description="Full business intelligence dashboard"
       />

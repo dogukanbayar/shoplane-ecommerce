@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import API from '../../api/axiosConfig'
 import toast from 'react-hot-toast'
 import JourneyVisualization from '../../components/journey/JourneyVisualization'
-import AdvancedSEO from '../../components/seo/AdvancedSEO'
+import AdvancedSeo from '../../components/seo/AdvancedSeo'
 
 function JourneyDetail() {
   const navigate = useNavigate()
@@ -46,7 +46,7 @@ function JourneyDetail() {
 
   return (
     <>
-      <AdvancedSEO
+      <AdvancedSeo
         title={`Journey ${journeyId} - MyShop Admin`}
         description="Customer journey detail view"
       />

@@ -75,7 +75,7 @@ function LoginPage() {
     if (isLogin) {
       result = await login(formData.email, formData.password)
     } else {
-      result = await register(formData.name, formData.email, formData.password)
+      result = await register({ name: formData.name, email: formData.email, password: formData.password })
     }
 
     setLoading(false)

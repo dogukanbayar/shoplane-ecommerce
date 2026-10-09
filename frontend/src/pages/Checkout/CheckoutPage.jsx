@@ -137,15 +137,27 @@ function CheckoutPage() {
 
       // Create order
       const orderData = {
+        userId: (typeof user !== "undefined" && user?._id) || undefined,
         items: items.map(item => ({
-          product: item._id,
+          product: item.product?._id || item._id || item.id,
           name: item.name,
           quantity: item.quantity,
           price: item.price,
           size: item.size,
           color: item.color
         })),
-        shippingAddress: addresses.find(a => a._id === selectedAddressId),
+        shippingAddress: (() => {
+          const raw = addresses.find(a => a._id === selectedAddressId) || addresses[0] || {};
+          return {
+            fullName: raw.fullName || raw.name || "Müşteri",
+            phone: raw.phone || "",
+            address: raw.address || raw.addressLine || raw.addressDetail || raw.fullAddress || "Adres belirtilmedi",
+            city: raw.city || raw.il || "İstanbul",
+            district: raw.district || raw.ilce || "",
+            postalCode: raw.postalCode || raw.zipCode || "34000",
+            country: raw.country || "Türkiye"
+          };
+        })(),
         paymentMethod: paymentMethod,
         subtotal: getSubtotal(),
         shippingPrice: selectedShippingOption.price,
@@ -158,6 +170,8 @@ function CheckoutPage() {
       const orderResult = await createOrder(orderData)
 
       if (orderResult.success) {
+        if (typeof clearCart === "function") clearCart();
+        setTimeout(() => navigate("/orders"), 1200);
         const order = orderResult.order
 
         // Track purchase funnel event

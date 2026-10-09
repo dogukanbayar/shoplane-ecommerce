@@ -3,7 +3,7 @@ import { motion } from 'framer-motion'
 import { Trophy, TrendingUp, Award } from 'lucide-react'
 import API from '../../api/axiosConfig'
 import toast from 'react-hot-toast'
-import AdvancedSEO from '../../components/seo/AdvancedSEO'
+import AdvancedSeo from '../../components/seo/AdvancedSeo'
 
 function LeaderboardPage() {
   const [leaderboard, setLeaderboard] = useState([])
@@ -54,7 +54,7 @@ function LeaderboardPage() {
 
   return (
     <>
-      <AdvancedSEO
+      <AdvancedSeo
         title="Leaderboard - MyShop Loyalty"
         description="See top loyalty program members"
       />

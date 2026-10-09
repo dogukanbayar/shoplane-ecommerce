@@ -22,7 +22,8 @@ function ProductsPage() {
   // Filters
   const [filters, setFilters] = useState({
     search: searchParams.get('search') || '',
-    category: searchParams.get('category') || '',
+    category: searchParams.get("category") || "",
+    search: searchParams.get("search") || searchParams.get("q") || "",
     brand: searchParams.get('brand') || '',
     minPrice: '',
     maxPrice: '',
@@ -78,7 +79,8 @@ function ProductsPage() {
     setLoading(true);
     try {
       const params = {
-        category: filters.category === 'Tümü' ? '' : filters.category,
+        category: filters.category === "Tümü" ? "" : filters.category,
+        search: filters.search || undefined,
         brand: filters.brand,
         minPrice: filters.minPrice,
         maxPrice: filters.maxPrice,

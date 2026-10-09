@@ -3,6 +3,7 @@ import { useABTest } from '../../hooks/useABTest';
 import { useJourneyTracking } from '../../hooks/useJourneyTracking';
 import { useMetaDescription } from '../../utils/metaDescriptions';
 import { useParams, Link } from 'react-router-dom';
+import { useCartStore } from '../../store/cartStore';
 import { Star, Heart, Share2, Truck, Shield, ArrowLeft, Plus, Minus, ShoppingCart } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Navbar from '../../components/layout/Navbar';
@@ -77,8 +78,14 @@ function ProductDetailPage() {
   const pageTitle = product ? `${product.name} | MyShop` : 'Ürün | MyShop';
   useMetaDescription(metaDescription, pageTitle);
 
-  // Dummy handlers for illustration
-  const handleAddToCart = () => {};
+  const { addItem } = useCartStore();
+  const handleAddToCart = () => {
+    if (!product) return;
+    const selectedSize = (typeof selectedVariant !== "undefined" && selectedVariant?.size) || product.sizes?.[0] || "Standart";
+    const selectedColor = (typeof selectedVariant !== "undefined" && selectedVariant?.color) || product.colors?.[0] || "Standart";
+    addItem(product, selectedSize, selectedColor, quantity || 1);
+    alert("Ürün sepete eklendi!");
+  };
   const handleToggleFavorite = () => setFavorite(f => !f);
 
   // Dummy price config for A/B test

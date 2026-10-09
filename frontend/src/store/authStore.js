@@ -13,7 +13,10 @@ const useAuthStore = create(
       error: null,
 
       // Kayıt Ol
-      register: async (userData) => {
+      register: async (arg1, arg2, arg3) => {
+        let userData = typeof arg1 === "object" && arg1 !== null
+          ? arg1
+          : { name: arg1, email: arg2, password: arg3 };
         set({ loading: true, error: null })
         try {
           const data = await authAPI.register(userData)

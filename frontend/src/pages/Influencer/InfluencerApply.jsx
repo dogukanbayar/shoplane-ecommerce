@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom'
 import API from '../../api/axiosConfig'
 import useAuthStore from '../../store/authStore'
 import toast from 'react-hot-toast'
-import AdvancedSEO from '../../components/seo/AdvancedSEO'
+import AdvancedSeo from '../../components/seo/AdvancedSeo'
 
 function InfluencerApply() {
   const navigate = useNavigate()
@@ -122,7 +122,7 @@ function InfluencerApply() {
 
   return (
     <>
-      <AdvancedSEO
+      <AdvancedSeo
         title="Influencer Ol - MyShop"
         description="MyShop influencer programına katıl, ürünleri tanıt ve kazanmaya başla. %10-25 arası komisyon oranları."
         keywords="influencer, referral program, kazanç, komisyon, iş birliği"

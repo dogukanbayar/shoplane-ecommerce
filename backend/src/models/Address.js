@@ -28,13 +28,17 @@ const addressSchema = new mongoose.Schema({
     type: String,
     required: [true, 'İlçe gereklidir']
   },
+  neighborhood: {
+    type: String,
+    default: ''
+  },
   address: {
     type: String,
     required: [true, 'Adres gereklidir']
   },
   zipCode: {
     type: String,
-    required: [true, 'Posta kodu gereklidir']
+    default: '34000'
   },
   isDefault: {
     type: Boolean,
@@ -45,14 +49,13 @@ const addressSchema = new mongoose.Schema({
 })
 
 // Kullanıcı için sadece bir varsayılan adres olabilir
-addressSchema.pre('save', async function(next) {
+addressSchema.pre("save", async function() {
   if (this.isDefault) {
     await this.constructor.updateMany(
       { user: this.user, _id: { $ne: this._id } },
       { isDefault: false }
-    )
+    );
   }
-  next()
 })
 
 module.exports = mongoose.model('Address', addressSchema)

@@ -1,6 +1,10 @@
 const mongoose = require('mongoose')
 
 const productSchema = new mongoose.Schema({
+  seller: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Seller"
+  },
   name: {
     type: String,
     required: [true, 'Ürün adı gereklidir'],

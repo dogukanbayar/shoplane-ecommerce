@@ -4,7 +4,7 @@ import { Filter, Plus, TrendingDown, BarChart3, Eye, Trash2 } from 'lucide-react
 import { useNavigate } from 'react-router-dom'
 import API from '../../api/axiosConfig'
 import toast from 'react-hot-toast'
-import AdvancedSEO from '../../components/seo/AdvancedSEO'
+import AdvancedSeo from '../../components/seo/AdvancedSeo'
 
 function FunnelManager() {
   const navigate = useNavigate()
@@ -49,7 +49,7 @@ function FunnelManager() {
 
   return (
     <>
-      <AdvancedSEO
+      <AdvancedSeo
         title="Conversion Funnels - MyShop Admin"
         description="Dönüşüm hunisi analizi ve optimizasyonu"
       />

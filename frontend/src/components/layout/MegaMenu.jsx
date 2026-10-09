@@ -1,578 +1,378 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import {
-  Smartphone, Laptop, Watch, Camera, Headphones,
+  Smartphone, Laptop, Watch, Camera,
   ShirtIcon, Briefcase, Gem,
   ShoppingBag, Dumbbell, Sparkles, Home,
-  ChevronRight, TrendingUp, Flame, Star
+  ChevronRight, TrendingUp, ChevronDown, Sparkle
 } from 'lucide-react'
 
 function MegaMenu() {
   const [activeCategory, setActiveCategory] = useState(null)
+  const menuRef = useRef(null)
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setActiveCategory(null)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
+
+  const handleCategoryClick = (category) => {
+    setActiveCategory(prev => prev === category.id ? null : category.id)
+  }
+
+  const handleItemClick = (categoryName, itemName) => {
+    setActiveCategory(null)
+    // Hem category hem de search query ile git ki backend tam eşleşme bulamazsa arama ile getirsin
+    navigate(`/products?category=${encodeURIComponent(categoryName)}&search=${encodeURIComponent(itemName)}`)
+  }
 
   const categories = [
     {
       id: 'elektronik',
       name: 'Elektronik',
       icon: Smartphone,
-      color: 'from-blue-500 to-cyan-500',
+      color: 'from-blue-600 to-indigo-600',
       subcategories: [
         {
           title: 'Telefon & Tablet',
-          icon: Smartphone,
           items: ['iPhone', 'Samsung Galaxy', 'iPad', 'Android Tablet', 'Aksesuarlar']
         },
         {
           title: 'Bilgisayar',
-          icon: Laptop,
           items: ['Laptop', 'Masaüstü', 'MacBook', 'Gaming PC', 'Monitör']
         },
         {
           title: 'Giyilebilir Teknoloji',
-          icon: Watch,
           items: ['Apple Watch', 'Samsung Watch', 'Akıllı Bileklik', 'Kulaklık']
         },
         {
           title: 'Fotoğraf & Video',
-          icon: Camera,
           items: ['DSLR Kamera', 'Mirrorless', 'Drone', 'GoPro', 'Lens']
         }
       ],
-      featured: {
-        title: 'En Çok Satanlar',
-        products: [
-          { name: 'iPhone 15 Pro Max', price: '54.999₺', image: 'photo-1592286927505-1def25e64eae' },
-          { name: 'MacBook Pro 16"', price: '48.999₺', image: 'photo-1517694712202-14dd9538aa97' },
-          { name: 'Sony WH-1000XM5', price: '8.999₺', image: 'photo-1505740420928-5e560c06d30e' }
-        ]
-      },
-      banner: {
-        title: 'Teknoloji Merkezi',
-        subtitle: 'Yeni teknolojileri keşfet',
-        image: 'photo-1519389950473-47ba0277781c'
-      }
+      featured: [
+        { name: 'iPhone 15 Pro Max', price: '54.999 ₺', img: 'https://images.unsplash.com/photo-1592286927505-1def25e64eae?w=200' },
+        { name: 'MacBook Pro 16"', price: '48.999 ₺', img: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=200' }
+      ]
     },
     {
       id: 'giyim',
       name: 'Giyim',
       icon: ShirtIcon,
-      color: 'from-purple-500 to-pink-500',
+      color: 'from-purple-600 to-pink-600',
       subcategories: [
         {
           title: 'Kadın Giyim',
-          icon: ShirtIcon,
           items: ['Elbise', 'Bluz', 'Pantolon', 'Etek', 'Ceket']
         },
         {
           title: 'Erkek Giyim',
-          icon: Briefcase,
           items: ['Gömlek', 'Tişört', 'Pantolon', 'Ceket', 'Takım Elbise']
         },
         {
           title: 'Spor Giyim',
-          icon: Dumbbell,
-          items: ['Koşu', 'Yoga', 'Fitness', 'Basketbol', 'Futbol']
+          items: ['Koşu', 'Yoga', 'Fitness', 'Basketbol', 'Eşofman']
         },
         {
-          title: 'İç Giyim',
-          icon: Gem,
-          items: ['Pijama', 'Gecelik', 'Tayt', 'Atlet']
+          title: 'İç Giyim & Ev',
+          items: ['Pijama', 'Gecelik', 'Tayt', 'Atlet', 'Çorap']
         }
       ],
-      featured: {
-        title: 'Trend Ürünler',
-        products: [
-          { name: 'Premium Blazer', price: '1.799₺', image: 'photo-1552062407-20eeb29dd533' },
-          { name: 'Comfort Jeans', price: '899₺', image: 'photo-1542272604-787c62d465d1' },
-          { name: 'Elegant Dress', price: '1.299₺', image: 'photo-1595777457583-95e059d581b8' }
-        ]
-      },
-      banner: {
-        title: 'Moda Koleksiyonu',
-        subtitle: 'Yeni sezon stilleri',
-        image: 'photo-1558618666-fcd25c85cd64'
-      }
+      featured: [
+        { name: 'Premium Blazer', price: '1.799 ₺', img: 'https://images.unsplash.com/photo-1552062407-20eeb29dd533?w=200' },
+        { name: 'Comfort Jeans', price: '899 ₺', img: 'https://images.unsplash.com/photo-1542272604-787c62d465d1?w=200' }
+      ]
     },
     {
       id: 'ayakkabi',
       name: 'Ayakkabı',
       icon: ShoppingBag,
-      color: 'from-orange-500 to-red-500',
+      color: 'from-orange-600 to-red-600',
       subcategories: [
         {
           title: 'Spor Ayakkabı',
-          icon: Dumbbell,
-          items: ['Koşu', 'Basketbol', 'Antrenman', 'Yürüyüş', 'Tenis']
+          items: ['Koşu', 'Basketbol', 'Antrenman', 'Yürüyüş', 'Sneaker']
         },
         {
           title: 'Günlük Ayakkabı',
-          icon: ShoppingBag,
-          items: ['Sneaker', 'Casual', 'Loafer', 'Espadrille']
+          items: ['Casual', 'Loafer', 'Espadrille', 'Mokasen']
         },
         {
           title: 'Kadın Ayakkabı',
-          icon: Sparkles,
-          items: ['Topuklu', 'Bot', 'Babet', 'Sandalet']
+          items: ['Topuklu', 'Bot', 'Babet', 'Sandalet', 'Çizme']
         },
         {
           title: 'Erkek Ayakkabı',
-          icon: Briefcase,
           items: ['Klasik', 'Bot', 'Terlik', 'Sandalet']
         }
       ],
-      featured: {
-        title: 'Çok Satanlar',
-        products: [
-          { name: 'Nike Air Max 90', price: '4.999₺', image: 'photo-1542291026-7eec264c27ff' },
-          { name: 'Adidas Ultraboost', price: '5.999₺', image: 'photo-1608231387042-66d1773070a5' },
-          { name: 'Classic Sneaker', price: '1.899₺', image: 'photo-1535381455947-6d995f57efc7' }
-        ]
-      },
-      banner: {
-        title: 'Ayakkabı Dünyası',
-        subtitle: 'Her adıma stabil',
-        image: 'photo-1543163521-9efcc06814cd'
-      }
+      featured: [
+        { name: 'Nike Air Max 90', price: '4.999 ₺', img: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=200' },
+        { name: 'Adidas Ultraboost', price: '5.999 ₺', img: 'https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=200' }
+      ]
     },
     {
       id: 'aksesuar',
       name: 'Aksesuar',
       icon: Gem,
-      color: 'from-green-500 to-emerald-500',
+      color: 'from-emerald-600 to-teal-600',
       subcategories: [
         {
           title: 'Çanta',
-          icon: ShoppingBag,
-          items: ['El Çantası', 'Sırt Çantası', 'Laptop Çantası', 'Spor Çantası']
+          items: ['El Çantası', 'Sırt Çantası', 'Laptop Çantası', 'Cüzdan']
         },
         {
           title: 'Saat',
-          icon: Watch,
-          items: ['Kadın Saat', 'Erkek Saat', 'Akıllı Saat', 'Çocuk Saat']
+          items: ['Kadın Saat', 'Erkek Saat', 'Akıllı Saat', 'Klasik Saat']
         },
         {
-          title: 'Takı',
-          icon: Gem,
+          title: 'Takı & Mücevher',
           items: ['Kolye', 'Küpe', 'Bileklik', 'Yüzük']
         },
         {
-          title: 'Gözlük',
-          icon: Star,
-          items: ['Güneş Gözlüğü', 'Optik Gözlük', 'Gece Gözlüğü']
+          title: 'Güneş Gözlüğü',
+          items: ['Polarize', 'Klasik', 'Spor Gözlük', 'Optik Çerçeve']
         }
       ],
-      featured: {
-        title: 'Öne Çıkanlar',
-        products: [
-          { name: 'Designer Sunglasses', price: '3.999₺', image: 'photo-1527014176246-b3954984cf27' },
-          { name: 'Luxury Handbag', price: '8.999₺', image: 'photo-1548036328-c9fa89d128fa' },
-          { name: 'Premium Watch', price: '2.999₺', image: 'photo-1523293182086-7651a899d37f' }
-        ]
-      },
-      banner: {
-        title: 'Aksesuar Şıklığı',
-        subtitle: 'Tamamlayıcı detaylar',
-        image: 'photo-1556821552-5a0e577edbfe'
-      }
+      featured: [
+        { name: 'Designer Güneş Gözlüğü', price: '3.999 ₺', img: 'https://images.unsplash.com/photo-1527014176246-b3954984cf27?w=200' }
+      ]
     },
     {
       id: 'ev',
       name: 'Ev & Yaşam',
       icon: Home,
-      color: 'from-indigo-500 to-purple-500',
+      color: 'from-indigo-600 to-violet-600',
       subcategories: [
         {
           title: 'Ev Aletleri',
-          icon: Home,
           items: ['Süpürge', 'Ütü', 'Blender', 'Mikser', 'Kahve Makinesi']
         },
         {
-          title: 'Mutfak',
-          icon: Sparkles,
-          items: ['Tencere Set', 'Tava', 'Bıçak Set', 'Sofra Takımı']
+          title: 'Mutfak Gereçleri',
+          items: ['Tencere Set', 'Tava', 'Bıçak Set', 'Sofra Takımı', 'Kupa']
         },
         {
           title: 'Ev Tekstili',
-          icon: Gem,
-          items: ['Nevresim', 'Havlu', 'Perde', 'Halı']
+          items: ['Nevresim', 'Havlu', 'Perde', 'Halı', 'Yastık']
         },
         {
-          title: 'Dekorasyon',
-          icon: Star,
+          title: 'Dekorasyon & Aydınlatma',
           items: ['Vazo', 'Tablo', 'Ayna', 'Saat', 'Aydınlatma']
         }
       ],
-      featured: {
-        title: 'Popüler Ürünler',
-        products: [
-          { name: 'Dyson Vacuum', price: '24.999₺', image: 'photo-1558618666-fcd25c85cd64' },
-          { name: 'Smart Coffee', price: '4.999₺', image: 'photo-1517668808822-9ebb02f2a0e6' },
-          { name: 'Air Fryer XXL', price: '5.999₺', image: 'photo-1585515320310-259814833133' }
-        ]
-      },
-      banner: {
-        title: 'Ev İçin Çözümler',
-        subtitle: 'Konforlu yaşamın başı',
-        image: 'photo-1556909114-f6e7ad7d3136'
-      }
+      featured: [
+        { name: 'Dyson Dikey Süpürge', price: '24.999 ₺', img: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=200' },
+        { name: 'Otomatik Espresso Makinesi', price: '5.499 ₺', img: 'https://images.unsplash.com/photo-1517668808822-9ebb02f2a0e6?w=200' }
+      ]
     },
     {
       id: 'spor',
       name: 'Spor & Outdoor',
       icon: Dumbbell,
-      color: 'from-red-500 to-pink-500',
+      color: 'from-rose-600 to-red-600',
       subcategories: [
         {
-          title: 'Fitness',
-          icon: Dumbbell,
-          items: ['Dambıl', 'Yoga Matı', 'Pilates', 'Direnç Bandı']
+          title: 'Fitness & Kondisyon',
+          items: ['Dambıl', 'Yoga Matı', 'Pilates', 'Direnç Bandı', 'Ağırlık Seti']
         },
         {
-          title: 'Outdoor',
-          icon: TrendingUp,
-          items: ['Kamp Malzemeleri', 'Çadır', 'Uyku Tulumu', 'Trekking']
+          title: 'Outdoor & Kamp',
+          items: ['Çadır', 'Uyku Tulumu', 'Kamp Sandalyesi', 'Termos', 'Trekking']
         },
         {
-          title: 'Takım Sporları',
-          icon: Flame,
-          items: ['Futbol', 'Basketbol', 'Voleybol', 'Tenis']
+          title: 'Top Sporları',
+          items: ['Futbol Topu', 'Basketbol Topu', 'Voleybol Topu', 'Tenis Raketi']
         },
         {
-          title: 'Su Sporları',
-          icon: Star,
-          items: ['Yüzme', 'Dalış', 'Sörf', 'Kano']
+          title: 'Su Sporları & Bisiklet',
+          items: ['Yüzücü Gözlüğü', 'Bone', 'Bisiklet Kaskı', 'Aksesuar']
         }
       ],
-      featured: {
-        title: 'En Çok Tercih Edilenler',
-        products: [
-          { name: 'Yoga Mat Pro', price: '299₺', image: 'https://images.unsplash.com/photo-1592476885657-236aa2c3e009?w=500&q=80' },
-          { name: 'Dumbbell Set', price: '1.899₺', image: 'https://images.unsplash.com/photo-1540126613408-eca07ce68773?w=500&q=80' },
-          { name: 'Trekking Bag', price: '3.299₺', image: 'https://images.unsplash.com/photo-1622260614153-03223fb72052?w=500&q=80' }
-        ]
-      },
-      banner: {
-        title: 'Spor & Sağlık',
-        subtitle: 'Aktif yaşamın ortağı',
-        image: 'photo-1534438327276-14e5300c3a48'
-      }
+      featured: [
+        { name: 'Pro Yoga Matı 6mm', price: '499 ₺', img: 'https://images.unsplash.com/photo-1592476885657-236aa2c3e009?w=200' }
+      ]
     },
     {
       id: 'kozmetik',
       name: 'Kozmetik',
       icon: Sparkles,
-      color: 'from-pink-500 to-rose-500',
+      color: 'from-pink-600 to-rose-600',
       subcategories: [
         {
           title: 'Cilt Bakımı',
-          icon: Sparkles,
-          items: ['Temizleyici', 'Tonik', 'Serum', 'Nemlendirici', 'Maske']
+          items: ['Temizleyici', 'Tonik', 'Serum', 'Nemlendirici', 'Güneş Kremi']
         },
         {
           title: 'Makyaj',
-          icon: Gem,
-          items: ['Fondöten', 'Ruj', 'Maskara', 'Far', 'Allık']
+          items: ['Fondöten', 'Ruj', 'Maskara', 'Far Paleti', 'Allık']
         },
         {
           title: 'Saç Bakımı',
-          icon: Star,
-          items: ['Şampuan', 'Saç Kremi', 'Saç Maskesi', 'Serum']
+          items: ['Şampuan', 'Saç Kremi', 'Saç Maskesi', 'Saç Serumu']
         },
         {
-          title: 'Kişisel Bakım',
-          icon: ShoppingBag,
-          items: ['Parfüm', 'Deodorant', 'Duş Jeli', 'El Kremi']
+          title: 'Kişisel Bakım & Parfüm',
+          items: ['Parfüm', 'Deodorant', 'Duş Jeli', 'Vücut Losyonu']
         }
       ],
-      featured: {
-        title: 'Yeni Gelenler',
-        products: [
-          { name: 'Premium Serum', price: '2.999₺', image: 'photo-1556228720-195a672e8a03' },
-          { name: 'Hair Dryer Pro', price: '14.999₺', image: 'photo-1522338140262-f46f5913618a' },
-          { name: 'Beauty Razor', price: '1.599₺', image: 'photo-1556821552-5a0e577edbfe' }
-        ]
-      },
-      banner: {
-        title: 'Güzellik & Bakım',
-        subtitle: 'Doğal güzelliğini artır',
-        image: 'photo-1596462502278-27bfdc403348'
-      }
+      featured: [
+        { name: 'Hyaluronik Asit Serum', price: '649 ₺', img: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=200' }
+      ]
     }
   ]
 
+  const currentCat = categories.find(c => c.id === activeCategory)
+
   return (
-    <div className="hidden lg:block relative">
-      <div className="flex gap-2">
-        {categories.map((category, catIndex) => (
-          <div
-            key={category.id}
-            className="relative group"
-            onMouseEnter={() => setActiveCategory(category.id)}
-            onMouseLeave={() => setActiveCategory(null)}
-          >
-            {/* Category Button with 3D Effect */}
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              <Link
-                to={`/products?category=${category.name}`}
-                className="flex items-center gap-2 px-4 py-2.5 rounded-xl hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-blue-900/30 dark:hover:to-purple-900/30 transition group relative"
+    <div className="relative w-full border-b border-gray-100 bg-white" ref={menuRef}>
+      <div className="max-w-7xl mx-auto px-4">
+        {/* Kategori Barı */}
+        <div className="flex items-center justify-between overflow-x-auto py-2 no-scrollbar gap-1">
+          {categories.map((category) => {
+            const isActive = activeCategory === category.id
+            return (
+              <button
+                key={category.id}
+                onClick={() => handleCategoryClick(category)}
+                className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all duration-200 ${
+                  isActive
+                    ? 'bg-blue-600 text-white shadow-sm ring-2 ring-blue-600/20'
+                    : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
+                }`}
               >
-                {/* Icon with 3D Rotation */}
-                <motion.div
-                  animate={{ rotateY: activeCategory === category.id ? 15 : 0 }}
-                  transition={{ duration: 0.3 }}
-                  className="perspective"
-                >
-                  <category.icon size={20} className="group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors" />
-                </motion.div>
-
-                <span className="font-semibold whitespace-nowrap dark:text-dark-text text-sm group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                  {category.name}
-                </span>
-
-                {/* Animated underline */}
-                <motion.div
-                  className="absolute bottom-0 left-4 right-4 h-0.5 bg-gradient-to-r from-blue-500 to-purple-500"
-                  initial={{ scaleX: 0 }}
-                  whileHover={{ scaleX: 1 }}
-                  transition={{ duration: 0.3 }}
+                <category.icon size={16} className={isActive ? 'text-white' : 'text-gray-500'} />
+                <span>{category.name}</span>
+                <ChevronDown
+                  size={13}
+                  className={`transition-transform duration-200 ${isActive ? 'rotate-180 text-white' : 'text-gray-400'}`}
                 />
-              </Link>
-            </motion.div>
-
-            {/* 3D Mega Menu Dropdown */}
-            <AnimatePresence>
-              {activeCategory === category.id && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 20, scale: 0.95 }}
-                  transition={{ duration: 0.3, type: 'spring', stiffness: 300 }}
-                  className="absolute top-full left-0 mt-3 z-50"
-                  style={{ width: '1000px' }}
-                >
-                  {/* Glow Effect */}
-                  <div className="absolute -inset-1 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-3xl blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
-                  <motion.div
-                    className="relative bg-white dark:bg-dark-card rounded-3xl shadow-2xl border border-gray-100 dark:border-gray-700 overflow-hidden backdrop-blur-xl"
-                    initial={{ rotateX: -10 }}
-                    animate={{ rotateX: 0 }}
-                    transition={{ duration: 0.4 }}
-                  >
-                    {/* Animated Background Gradient */}
-                    <motion.div
-                      className={`absolute inset-0 bg-gradient-to-br ${category.color} opacity-5`}
-                      animate={{ opacity: [0.05, 0.1, 0.05] }}
-                      transition={{ duration: 3, repeat: Infinity }}
-                    />
-
-                    <div className="relative grid grid-cols-12 gap-0">
-                      {/* Left - Subcategories with 3D Cards */}
-                      <div className="col-span-7 p-8 bg-gradient-to-b from-gray-50 to-white dark:from-dark-hover dark:to-dark-card">
-                        <div className="grid grid-cols-2 gap-6">
-                          {category.subcategories.map((sub, index) => (
-                            <motion.div
-                              key={index}
-                              initial={{ opacity: 0, y: 20 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              transition={{ delay: index * 0.1, duration: 0.4 }}
-                              whileHover={{ y: -5 }}
-                              className="group/sub p-4 rounded-2xl hover:bg-white dark:hover:bg-dark-bg transition-all duration-300 border border-transparent hover:border-gray-200 dark:hover:border-gray-700 cursor-pointer relative overflow-hidden"
-                            >
-                              {/* Hover 3D Background */}
-                              <motion.div
-                                className={`absolute -inset-full bg-gradient-to-br ${category.color} opacity-0 group-hover/sub:opacity-5 transition-opacity duration-300`}
-                                animate={{ rotate: [0, 360] }}
-                                transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
-                              />
-
-                              <div className="relative flex items-center gap-3 mb-4">
-                                <motion.div
-                                  whileHover={{ rotate: 360, scale: 1.2 }}
-                                  transition={{ duration: 0.6 }}
-                                  className={`w-10 h-10 rounded-xl bg-gradient-to-br ${category.color} flex items-center justify-center shadow-lg group-hover/sub:shadow-xl transition-shadow`}
-                                >
-                                  <sub.icon size={20} className="text-white" />
-                                </motion.div>
-                                <h3 className="font-bold text-gray-900 dark:text-dark-text group-hover/sub:text-blue-600 dark:group-hover/sub:text-blue-400 transition-colors">{sub.title}</h3>
-                              </div>
-
-                              {/* Items with stagger animation */}
-                              <ul className="space-y-2.5 relative">
-                                {sub.items.map((item, i) => (
-                                  <motion.li
-                                    key={i}
-                                    initial={{ opacity: 0, x: -10 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    transition={{ delay: index * 0.1 + i * 0.05, duration: 0.3 }}
-                                  >
-                                    <Link
-                                      to={`/products?category=${category.name}&subcategory=${item}`}
-                                      className="text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 hover:translate-x-2 transition-all flex items-center gap-2 group/item relative"
-                                    >
-                                      {/* Animated Chevron */}
-                                      <motion.div
-                                        initial={{ opacity: 0, x: -10 }}
-                                        whileHover={{ opacity: 1, x: 0 }}
-                                        className="overflow-hidden"
-                                      >
-                                        <ChevronRight size={14} className="group-hover/item:text-blue-600 dark:group-hover/item:text-blue-400 transition-colors" />
-                                      </motion.div>
-                                      <span className="group-hover/item:font-semibold transition-all">{item}</span>
-
-                                      {/* Hover Line */}
-                                      <motion.div
-                                        className="absolute bottom-0 left-6 right-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-500 opacity-0 group-hover/item:opacity-100"
-                                        initial={{ scaleX: 0 }}
-                                        whileHover={{ scaleX: 1 }}
-                                        transition={{ duration: 0.3 }}
-                                      />
-                                    </Link>
-                                  </motion.li>
-                                ))}
-                              </ul>
-                            </motion.div>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Right - Featured & Banner with 3D Effect */}
-                      <div className="col-span-5 p-8 bg-gradient-to-b from-white to-gray-50 dark:from-dark-card dark:to-dark-hover border-l border-gray-100 dark:border-gray-700">
-                        {/* Featured Products */}
-                        <motion.div
-                          className="mb-8"
-                          initial={{ opacity: 0, x: 20 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: 0.2, duration: 0.4 }}
-                        >
-                          <h3 className="font-bold text-gray-900 dark:text-dark-text mb-4 flex items-center gap-2">
-                            <motion.div
-                              animate={{ rotate: [0, 360] }}
-                              transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
-                            >
-                              <TrendingUp size={18} className={`bg-gradient-to-r ${category.color} bg-clip-text text-transparent`} />
-                            </motion.div>
-                            {category.featured.title}
-                          </h3>
-
-                          <div className="space-y-3">
-                            {category.featured.products.map((product, index) => (
-                              <motion.div
-                                key={index}
-                                initial={{ opacity: 0, x: 20 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ delay: 0.2 + index * 0.1, duration: 0.4 }}
-                                whileHover={{ x: 10, scale: 1.02 }}
-                              >
-                                <Link
-                                  to="/products"
-                                  className="flex items-center gap-3 p-3 rounded-xl hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 dark:hover:from-blue-900/20 dark:hover:to-purple-900/20 transition group relative overflow-hidden border border-transparent hover:border-blue-200 dark:hover:border-blue-900/50"
-                                >
-                                  {/* 3D Image Container */}
-                                  <motion.div
-                                    className="w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 bg-gray-100 dark:bg-dark-bg shadow-lg"
-                                    whileHover={{
-                                      rotateY: 15,
-                                      rotateX: -10,
-                                      scale: 1.1
-                                    }}
-                                    transition={{ type: 'spring', stiffness: 300 }}
-                                  >
-                                    <img
-                                      src={product.images?.[0] || 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="200" height="200"%3E%3Crect width="200" height="200" fill="%23e5e7eb"/%3E%3Ctext x="50%" y="50%" font-size="12" fill="%239ca3af" text-anchor="middle" dominant-baseline="middle" font-family="system-ui"%3ENo Image%3C/text%3E%3C/svg%3E'}
-                                      alt={product.name}
-                                      className="w-full h-full object-cover"
-                                    />
-                                  </motion.div>
-
-                                  <div className="flex-1 min-w-0">
-                                    <p className="text-sm font-semibold truncate group-hover:text-blue-600 dark:group-hover:text-blue-400 transition">
-                                      {product.name}
-                                    </p>
-                                    <motion.p
-                                      className={`text-sm font-bold bg-gradient-to-r ${category.color} bg-clip-text text-transparent`}
-                                      whileHover={{ scale: 1.1 }}
-                                    >
-                                      {product.price}
-                                    </motion.p>
-                                  </div>
-
-                                  <motion.div
-                                    animate={{ x: [0, 5, 0] }}
-                                    transition={{ duration: 2, repeat: Infinity }}
-                                    className="group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors"
-                                  >
-                                    <ChevronRight size={16} />
-                                  </motion.div>
-                                </Link>
-                              </motion.div>
-                            ))}
-                          </div>
-                        </motion.div>
-
-                        {/* 3D Banner with Parallax */}
-                        <motion.div
-                          initial={{ opacity: 0, y: 20 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: 0.4, duration: 0.4 }}
-                          whileHover={{ scale: 1.05, rotateY: 5 }}
-                          className="group/banner"
-                        >
-                          <Link
-                            to={`/products?category=${category.name}`}
-                            className="block relative h-32 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-shadow"
-                          >
-                            {/* Animated Background */}
-                            <motion.img
-                              src={`https://images.unsplash.com/${category.banner.image}?w=600`}
-                              alt={category.banner.title}
-                              className="w-full h-full object-cover"
-                              animate={{ scale: 1.05 }}
-                              whileHover={{ scale: 1.15 }}
-                              transition={{ duration: 0.5 }}
-                            />
-
-                            {/* Gradient Overlay */}
-                            <motion.div
-                              className={`absolute inset-0 bg-gradient-to-r ${category.color} opacity-75 group-hover/banner:opacity-85`}
-                              animate={{ opacity: [0.75, 0.8, 0.75] }}
-                              transition={{ duration: 2, repeat: Infinity }}
-                            />
-
-                            {/* Content with 3D Transform */}
-                            <motion.div
-                              className="absolute inset-0 flex flex-col items-center justify-center text-white p-4"
-                              animate={{ y: [0, -5, 0] }}
-                              transition={{ duration: 2, repeat: Infinity }}
-                            >
-                              <motion.h4
-                                className="text-lg font-bold mb-1"
-                                whileHover={{ scale: 1.1 }}
-                              >
-                                {category.banner.title}
-                              </motion.h4>
-                              <motion.p
-                                className="text-sm opacity-90"
-                                whileHover={{ opacity: 1 }}
-                              >
-                                {category.banner.subtitle}
-                              </motion.p>
-                            </motion.div>
-                          </Link>
-                        </motion.div>
-                      </div>
-                    </div>
-                  </motion.div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-        ))}
+              </button>
+            )
+          })}
+        </div>
       </div>
+
+      {/* Açılan Modern Mega Dropdown */}
+      <AnimatePresence>
+        {currentCat && (
+          <motion.div
+            initial={{ opacity: 0, y: -4 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -4 }}
+            transition={{ duration: 0.18 }}
+            className="absolute left-0 right-0 top-full w-full bg-white border-b border-gray-200 shadow-xl z-50 py-7"
+          >
+            <div className="max-w-7xl mx-auto px-6">
+              {/* Üst Başlık & Tümünü Gör */}
+              <div className="flex items-center justify-between pb-4 mb-6 border-b border-gray-100">
+                <div className="flex items-center gap-3">
+                  <div className={`w-8 h-8 rounded-lg bg-gradient-to-r ${currentCat.color} flex items-center justify-center text-white shadow-sm`}>
+                    <currentCat.icon size={18} />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-gray-900 text-base">
+                      {currentCat.name}
+                    </h3>
+                    <p className="text-xs text-gray-400">Aradığın tüm ürünler tek bir yerde</p>
+                  </div>
+                </div>
+
+                <Link
+                  to={`/products?category=${encodeURIComponent(currentCat.name)}`}
+                  onClick={() => setActiveCategory(null)}
+                  className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-bold text-blue-600 hover:text-white hover:bg-blue-600 rounded-lg border border-blue-200 hover:border-transparent transition-all"
+                >
+                  {currentCat.name} Tüm Ürünleri Gör
+                  <ChevronRight size={14} />
+                </Link>
+              </div>
+
+              {/* Grid: 4 Kolon Alt Kategori + 1 Kolon Öne Çıkanlar */}
+              <div className="grid grid-cols-12 gap-8">
+                {/* Alt Kategoriler (9 Kolon) */}
+                <div className="col-span-12 lg:col-span-9 grid grid-cols-2 sm:grid-cols-4 gap-6">
+                  {currentCat.subcategories.map((sub, idx) => (
+                    <div key={idx} className="space-y-3">
+                      <h4 className="font-bold text-gray-900 text-sm pb-1 border-b border-gray-100 flex items-center gap-1.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-blue-600" />
+                        {sub.title}
+                      </h4>
+                      <ul className="space-y-2">
+                        {sub.items.map((item, i) => (
+                          <li key={i}>
+                            <button
+                              onClick={() => handleItemClick(currentCat.name, item)}
+                              className="text-xs text-gray-600 hover:text-blue-600 hover:font-medium transition-colors text-left w-full py-0.5 block hover:translate-x-1 duration-150"
+                            >
+                              {item}
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Öne Çıkan Popüler Ürünler (3 Kolon) */}
+                <div className="col-span-12 lg:col-span-3 bg-gray-50/80 rounded-2xl p-4 border border-gray-100 flex flex-col justify-between">
+                  <div>
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-3 flex items-center gap-1">
+                      <TrendingUp size={13} className="text-orange-500" /> Popüler Seçimler
+                    </span>
+                    <div className="space-y-3">
+                      {currentCat.featured?.map((feat, fIdx) => (
+                        <div
+                          key={fIdx}
+                          onClick={() => handleItemClick(currentCat.name, feat.name)}
+                          className="flex items-center gap-3 p-2 bg-white rounded-xl shadow-xs border border-gray-100 hover:border-blue-200 cursor-pointer transition group"
+                        >
+                          <img
+                            src={feat.img}
+                            alt={feat.name}
+                            className="w-12 h-12 object-cover rounded-lg bg-gray-100 flex-shrink-0"
+                            onError={(e) => {
+                              e.target.onerror = null
+                              e.target.src = 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=100'
+                            }}
+                          />
+                          <div className="min-w-0 flex-1">
+                            <p className="text-xs font-semibold text-gray-800 group-hover:text-blue-600 truncate">
+                              {feat.name}
+                            </p>
+                            <p className="text-xs font-bold text-blue-600 mt-0.5">
+                              {feat.price}
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="mt-4 pt-3 border-t border-gray-200/60 text-center">
+                    <button
+                      onClick={() => {
+                        setActiveCategory(null)
+                        navigate(`/products?category=${encodeURIComponent(currentCat.name)}`)
+                      }}
+                      className="text-xs text-gray-500 hover:text-blue-600 font-medium"
+                    >
+                      Kategorideki 50+ Ürünü Keşfet →
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }

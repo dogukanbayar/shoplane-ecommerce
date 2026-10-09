@@ -9,8 +9,20 @@ export const orderAPI = {
 
   // Kullanıcının siparişleri
   getMyOrders: async () => {
-    const response = await API.get('/orders/my-orders')
-    return response.data
+    const response = await API.get("/orders/my-orders");
+    return response.data;
+  },
+
+  // Sipariş İptal Et
+  cancelOrder: async (id, reason) => {
+    const response = await API.put("/orders/" + id + "/cancel", { reason });
+    return response.data;
+  },
+
+  // İade Talebi Oluştur
+  returnOrder: async (id, reason) => {
+    const response = await API.put("/orders/" + id + "/return", { reason });
+    return response.data;
   },
 
   // Tek sipariş detayı
