@@ -14,7 +14,7 @@
 
 ## Overview
 
-MyShop is a production-oriented full-stack e-commerce platform designed to cover the
+ShopLane is a production-oriented full-stack e-commerce platform designed to cover the
 complete customer journey: discovering products, managing a cart, checking out,
 tracking orders and interacting with customer support.
 
@@ -38,38 +38,38 @@ with a REST API, JWT authentication, MongoDB persistence and real-time capabilit
 ## Screenshots
 
 <p align="center">
-  <img src="./docs/screenshots/resim1.png" alt="MyShop screen 1" width="420" />
-  <img src="./docs/screenshots/resim2.png" alt="MyShop screen 2" width="420" />
+  <img src="./docs/screenshots/resim1.png" alt="ShopLane screen 1" width="420" />
+  <img src="./docs/screenshots/resim2.png" alt="ShopLane screen 2" width="420" />
 </p>
 
 <p align="center">
-  <img src="./docs/screenshots/resim3.png" alt="MyShop screen 3" width="420" />
-  <img src="./docs/screenshots/resim4.png" alt="MyShop screen 4" width="420" />
+  <img src="./docs/screenshots/resim3.png" alt="ShopLane screen 3" width="420" />
+  <img src="./docs/screenshots/resim4.png" alt="ShopLane screen 4" width="420" />
 </p>
 
 <p align="center">
-  <img src="./docs/screenshots/resim5.png" alt="MyShop screen 5" width="420" />
-  <img src="./docs/screenshots/resim6.png" alt="MyShop screen 6" width="420" />
+  <img src="./docs/screenshots/resim5.png" alt="ShopLane screen 5" width="420" />
+  <img src="./docs/screenshots/resim6.png" alt="ShopLane screen 6" width="420" />
 </p>
 
 <p align="center">
-  <img src="./docs/screenshots/resim7.png" alt="MyShop screen 7" width="420" />
-  <img src="./docs/screenshots/resim8.png" alt="MyShop screen 8" width="420" />
+  <img src="./docs/screenshots/resim7.png" alt="ShopLane screen 7" width="420" />
+  <img src="./docs/screenshots/resim8.png" alt="ShopLane screen 8" width="420" />
 </p>
 
 <p align="center">
-  <img src="./docs/screenshots/resim9.png" alt="MyShop screen 9" width="420" />
-  <img src="./docs/screenshots/resim10.png" alt="MyShop screen 10" width="420" />
+  <img src="./docs/screenshots/resim9.png" alt="ShopLane screen 9" width="420" />
+  <img src="./docs/screenshots/resim10.png" alt="ShopLane screen 10" width="420" />
 </p>
 
 <p align="center">
-  <img src="./docs/screenshots/resim11.png" alt="MyShop screen 11" width="420" />
-  <img src="./docs/screenshots/resim12.png" alt="MyShop screen 12" width="420" />
+  <img src="./docs/screenshots/resim11.png" alt="ShopLane screen 11" width="420" />
+  <img src="./docs/screenshots/resim12.png" alt="ShopLane screen 12" width="420" />
 </p>
 
 <p align="center">
-  <img src="./docs/screenshots/resim13.png" alt="MyShop screen 13" width="420" />
-  <img src="./docs/screenshots/resim14.png" alt="MyShop screen 14" width="420" />
+  <img src="./docs/screenshots/resim13.png" alt="ShopLane screen 13" width="420" />
+  <img src="./docs/screenshots/resim14.png" alt="ShopLane screen 14" width="420" />
 </p>
 
 ## Tech Stack
@@ -111,156 +111,3 @@ flowchart LR
     API --> DB[(MongoDB)]
     API --> Payment[Iyzico]
     API --> Mail[Nodemailer]
-```
-
-The frontend communicates with the backend through `/api`. During local development,
-Vite proxies those requests to the Express server on port `5001`. The backend owns
-authentication, business rules, validation and persistence.
-
-## Project Structure
-
-```text
-.
-├── backend/
-│   ├── src/
-│   │   ├── config/          # Database and application configuration
-│   │   ├── controllers/     # Request and business-flow handlers
-│   │   ├── middleware/      # Auth, security and error middleware
-│   │   ├── models/          # Mongoose models
-│   │   ├── routes/          # REST API routes
-│   │   ├── services/        # Application services
-│   │   └── server.js        # Express and Socket.IO entry point
-│   └── package.json
-├── frontend/
-│   ├── src/
-│   │   ├── api/             # API clients
-│   │   ├── components/      # Reusable UI components
-│   │   ├── pages/           # Route-level screens
-│   │   ├── store/           # Zustand stores
-│   │   └── main.jsx         # React entry point
-│   └── package.json
-├── docs/screenshots/         # README product screenshots
-└── docker-compose.yml
-```
-
-## Getting Started
-
-### Requirements
-
-- Node.js 18 or newer
-- npm
-- MongoDB running locally or a MongoDB Atlas connection
-
-### Environment configuration
-
-Create or update:
-
-- `backend/.env`
-- `frontend/.env`
-
-For local development, the important values are:
-
-```env
-# backend/.env
-NODE_ENV=development
-PORT=5001
-MONGODB_URI=mongodb://127.0.0.1:27017/eticaret
-CLIENT_URL=http://localhost:5178
-JWT_SECRET=replace-with-a-long-local-secret
-```
-
-```env
-# frontend/.env
-VITE_API_URL=/api
-```
-
-Never commit real passwords, JWT secrets, payment credentials or SMTP credentials.
-
-### Install dependencies
-
-```bash
-npm install
-npm --prefix backend install
-npm --prefix frontend install
-```
-
-### Run frontend and backend together
-
-From the repository root:
-
-```bash
-npm run dev
-```
-
-Local URLs:
-
-- Frontend: http://127.0.0.1:5178
-- Backend: http://localhost:5001
-- Health check: http://localhost:5001/api/health
-
-If port `5178` is already in use, Vite automatically selects the next available
-port. The terminal output is the source of truth for the frontend URL.
-
-### Run services separately
-
-```bash
-# Backend
-npm --prefix backend run dev
-
-# Frontend
-npm --prefix frontend run dev
-```
-
-## Useful Commands
-
-```bash
-# Backend
-npm --prefix backend start
-npm --prefix backend run seed
-npm --prefix backend test
-
-# Frontend
-npm --prefix frontend run build
-npm --prefix frontend run lint
-npm --prefix frontend test
-```
-
-## Deployment
-
-The application can be deployed as separate services:
-
-1. Provision MongoDB Atlas and create the required database user.
-2. Deploy `backend/` as a Node.js web service.
-3. Configure backend environment variables, including `MONGODB_URI`,
-   `JWT_SECRET`, `CLIENT_URL` and payment/email credentials.
-4. Build and deploy `frontend/` with `VITE_API_URL` pointing to the backend API.
-5. Verify the deployment through `/api/health`.
-
-Detailed production instructions are available in
-[`PRODUCTION_DEPLOYMENT.md`](./PRODUCTION_DEPLOYMENT.md).
-
-## Security Notes
-
-- Keep all `.env` files out of version control.
-- Use separate credentials for development and production.
-- Restrict MongoDB Atlas network access where possible.
-- Use HTTPS and strong secrets in production.
-- Configure payment and SMTP credentials only through the deployment platform.
-
-## Roadmap
-
-- Add richer API documentation with OpenAPI
-- Expand automated end-to-end coverage
-- Improve observability with structured logs and metrics
-- Add further personalization and recommendation capabilities
-
-## Author
-
-**Dogukan Bayar**
-
-- GitHub: [dogu08](https://github.com/dogu08)
-- Repository: [eticaret-projesi](https://github.com/dogu08/eticaret-projesi)
-
-## License
-
-This project is licensed under the MIT License.
